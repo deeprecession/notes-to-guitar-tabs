@@ -1,5 +1,9 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import MusicSheet from "./components/MusicSheet.vue"
+</script>
 
-<template>hi</template>
+<template>
+    <MusicSheet />
+</template>
 
-<style scoped></style>
+<style lang="css" scoped></style>
