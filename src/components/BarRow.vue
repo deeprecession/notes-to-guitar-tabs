@@ -2,8 +2,9 @@
 import { ref, useTemplateRef } from "vue"
 import Note from "./Note.vue"
 
-defineProps<{
+const props = defineProps<{
     hasLine: boolean
+    width: number
 }>()
 
 const notes = ref<Record<number, null>>({})
@@ -41,9 +42,9 @@ function getColXPos(col: number) {
         throw new Error(`getColXPos: lineElement is not mounted`)
     }
 
-    const halfColumnShift = (lineElem.value?.clientWidth / COLS) * 0.5
-
-    return halfColumnShift + (lineElem.value?.clientWidth * col) / COLS
+    const halfColumnShift = (props.width / COLS) * 0.5
+    const nColumnsShift = (props.width * col) / COLS
+    return halfColumnShift + nColumnsShift
 }
 
 function getNoteYPos() {
