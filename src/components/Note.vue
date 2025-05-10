@@ -25,6 +25,6 @@ defineEmits<{
 }
 
 .note {
-    display: block; /* Removes extra space */
+    display: block;
 }
 </style>

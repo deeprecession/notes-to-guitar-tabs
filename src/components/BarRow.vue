@@ -41,7 +41,9 @@ function getColXPos(col: number) {
         throw new Error(`getColXPos: lineElement is not mounted`)
     }
 
-    return (lineElem.value?.clientWidth * col) / COLS
+    const halfColumnShift = (lineElem.value?.clientWidth / COLS) * 0.5
+
+    return halfColumnShift + (lineElem.value?.clientWidth * col) / COLS
 }
 
 function getNoteYPos() {
@@ -52,7 +54,7 @@ function getNoteYPos() {
     return 2 * lineElem.value?.clientHeight
 }
 
-function deleteNote(col: number) {
+function click(col: number) {
     delete notes.value[col]
 }
 
@@ -71,8 +73,8 @@ function hideGhostNote() {
 </script>
 
 <template>
-    <div ref="lineElem" @mousemove="updateGhostNote" @mouseout="hideGhostNote" :class="[$style.container, hasLine && $style.horizontalLine]" @click="onClick">
-        <Note v-for="(_, col) in notes" ref="noteElem" :key="col" :class="$style.note" :x="getColXPos(col)" :y="getNoteYPos()" @delete="deleteNote(col)" />
+    <div ref="lineElem" :class="[$style.container, hasLine && $style.horizontalLine]" @mousemove="updateGhostNote" @mouseout="hideGhostNote" @click="onClick">
+        <Note v-for="(_, col) in notes" ref="noteElem" :key="col" :class="$style.note" :x="getColXPos(col)" :y="getNoteYPos()" @click="click(col)" />
         <Note v-if="isGhostNoteShown" :class="$style.note" :x="getColXPos(ghostNoteCol)" :y="getNoteYPos()" />
     </div>
 </template>
@@ -98,7 +100,7 @@ function hideGhostNote() {
 }
 
 .note {
-    transform: translateY(-100%);
+    transform: translate(-50%, -100%);
     z-index: -10;
 }
 </style>
