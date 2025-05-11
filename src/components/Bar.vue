@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { defineProps, onMounted, onUnmounted, ref, useTemplateRef } from "vue"
 import BarRow from "./BarRow.vue"
+import type { BarNotes } from "./MusicSheet.vue"
 
 type BarProps = {
-    notes: Record<number, Record<number, boolean>>
-    noteWidth: number
+    barNotes: BarNotes
     columnsNum: number
+    noteWidth: number
+    noteHeight: number
 }
 defineProps<BarProps>()
 
@@ -47,11 +49,11 @@ const shouldHaveLine = (index: number) => {
     >
         <BarRow
             v-for="(_, index) in [...Array(LINES_NUM).keys()]"
-            :key="index"
-            :height="15"
+            :key="`barrow-${index}`"
+            :height="noteHeight"
             :noteWidth="noteWidth"
             :hasLine="shouldHaveLine(index)"
-            :notes="notes[index] || {}"
+            :barRowNotes="barNotes[index] || {}"
             :columnsNum="columnsNum"
             @add-note="(col) => $emit('add-note', index, col)"
         />

@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { ref, useCssModule, type StyleValue } from "vue"
+import { computed, ref, useCssModule, type StyleValue } from "vue"
 import Note from "./Note.vue"
+import type { BarRowNotes } from "./MusicSheet.vue"
 
 const props = defineProps<{
     hasLine: boolean
     noteWidth: number
-    notes: Record<number, boolean>
+    barRowNotes: BarRowNotes
     columnsNum: number
     height: number
 }>()
@@ -14,8 +15,7 @@ const emit = defineEmits<{
     (e: "add-note", col: number): void
 }>()
 
-const width = ref(props.columnsNum * props.noteWidth)
-const COLS = props.columnsNum
+const width = computed(() => props.columnsNum * props.noteWidth)
 
 function onClick(e: MouseEvent) {
     const clickedColumn = getColumnUnderMouseCursor(e)
@@ -27,22 +27,26 @@ function getColumnUnderMouseCursor(e: MouseEvent) {
     const rect = target.getBoundingClientRect()
     const x = e.clientX - rect.left
 
-    if (x < 0 || x >= target.offsetWidth) {
-        throw new Error(`click X coordinate is out ouf bounce x=${x}`)
+    if (x <= 0) {
+        return 0
     }
 
-    const colClick = Math.floor((x * COLS) / target.offsetWidth)
+    if (x >= target.offsetWidth) {
+        return props.columnsNum - 1
+    }
 
-    if (colClick >= COLS) {
-        return COLS - 1
+    const colClick = Math.floor((x * props.columnsNum) / target.offsetWidth)
+
+    if (colClick >= props.columnsNum) {
+        return props.columnsNum - 1
     }
 
     return colClick
 }
 
 function getNoteXShift(col: number) {
-    const halfColumnShift = (width.value / COLS) * 0.5
-    const nColumnsShift = (width.value * col) / COLS
+    const halfColumnShift = (width.value / props.columnsNum) * 0.5
+    const nColumnsShift = (width.value * col) / props.columnsNum
     return halfColumnShift + nColumnsShift
 }
 
@@ -72,7 +76,7 @@ function lineClass() {
     }
 }
 function lineStyles(): StyleValue {
-    return [{ width: width.value + "px", height: props.height + "px" }]
+    return [{ width: width + "px", height: props.height + "px" }]
 }
 </script>
 
@@ -86,7 +90,7 @@ function lineStyles(): StyleValue {
         @click="onClick"
     >
         <Note
-            v-for="(_, col) in notes"
+            v-for="(_, col) in barRowNotes"
             ref="noteElem"
             :key="col"
             :class="$style.note"
