@@ -3,8 +3,13 @@ import { defineProps, onMounted, onUnmounted, ref, useTemplateRef } from "vue"
 import BarRow from "./BarRow.vue"
 
 type BarProps = {
+    notes: Record<number, Record<number, boolean>>
+    noteWidth: number
     columnsNum: number
 }
+defineProps<BarProps>()
+
+const LINES_NUM = 23
 
 const barElem = useTemplateRef("barRef")
 const barWidth = ref(0)
@@ -25,36 +30,31 @@ onUnmounted(() => {
     observer.disconnect()
 })
 
-defineProps<BarProps>()
+defineEmits<{
+    (e: "add-note", line: number, col: number): void
+}>()
+
+const shouldHaveLine = (index: number) => {
+    return index >= 7 && index <= 15 && (index - 7) % 2 === 0
+}
 </script>
 
 <template>
-    <div ref="barRef" :class="$style.container">
-        <BarRow :hasLine="false" :width="barWidth" />
-        <BarRow :hasLine="false" :width="barWidth" />
-        <BarRow :hasLine="false" :width="barWidth" />
-        <BarRow :hasLine="false" :width="barWidth" />
-        <BarRow :hasLine="false" :width="barWidth" />
-        <BarRow :hasLine="false" :width="barWidth" />
-        <BarRow :hasLine="false" :width="barWidth" />
-
-        <BarRow :hasLine="true" :width="barWidth" />
-        <BarRow :hasLine="false" :width="barWidth" />
-        <BarRow :hasLine="true" :width="barWidth" />
-        <BarRow :hasLine="false" :width="barWidth" />
-        <BarRow :hasLine="true" :width="barWidth" />
-        <BarRow :hasLine="false" :width="barWidth" />
-        <BarRow :hasLine="true" :width="barWidth" />
-        <BarRow :hasLine="false" :width="barWidth" />
-        <BarRow :hasLine="true" :width="barWidth" />
-
-        <BarRow :hasLine="false" :width="barWidth" />
-        <BarRow :hasLine="false" :width="barWidth" />
-        <BarRow :hasLine="false" :width="barWidth" />
-        <BarRow :hasLine="false" :width="barWidth" />
-        <BarRow :hasLine="false" :width="barWidth" />
-        <BarRow :hasLine="false" :width="barWidth" />
-        <BarRow :hasLine="false" :width="barWidth" />
+    <div
+        ref="barRef"
+        :class="$style.container"
+        :style="{ maxWidth: columnsNum * noteWidth + 'px' }"
+    >
+        <BarRow
+            v-for="(_, index) in [...Array(LINES_NUM).keys()]"
+            :key="index"
+            :height="15"
+            :noteWidth="noteWidth"
+            :hasLine="shouldHaveLine(index)"
+            :notes="notes[index] || {}"
+            :columnsNum="columnsNum"
+            @add-note="(col) => $emit('add-note', index, col)"
+        />
     </div>
 </template>
 

@@ -11,7 +11,11 @@ defineEmits<{
 </script>
 
 <template>
-    <div :style="{ left: `${x}px`, top: `${y}px` }" :class="$style['note-wrapper']" @click="$emit('delete')">
+    <div
+        :style="{ left: `${x}px`, top: `${y}px` }"
+        :class="$style['note-wrapper']"
+        @click="$emit('delete')"
+    >
         <NoteIcon :class="$style.note" />
     </div>
 </template>

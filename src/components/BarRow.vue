@@ -1,23 +1,28 @@
 <script setup lang="ts">
-import { ref, useTemplateRef } from "vue"
+import { ref, useCssModule, type StyleValue } from "vue"
 import Note from "./Note.vue"
 
 const props = defineProps<{
     hasLine: boolean
-    width: number
+    noteWidth: number
+    notes: Record<number, boolean>
+    columnsNum: number
+    height: number
 }>()
 
-const notes = ref<Record<number, null>>({})
+const emit = defineEmits<{
+    (e: "add-note", col: number): void
+}>()
 
-const COLS = 16
+const width = ref(props.columnsNum * props.noteWidth)
+const COLS = props.columnsNum
 
 function onClick(e: MouseEvent) {
-    const colClick = getColFromMouseEvent(e)
-
-    notes.value[colClick] = null
+    const clickedColumn = getColumnUnderMouseCursor(e)
+    emit("add-note", clickedColumn)
 }
 
-function getColFromMouseEvent(e: MouseEvent) {
+function getColumnUnderMouseCursor(e: MouseEvent) {
     const target = e.currentTarget as HTMLElement
     const rect = target.getBoundingClientRect()
     const x = e.clientX - rect.left
@@ -35,28 +40,14 @@ function getColFromMouseEvent(e: MouseEvent) {
     return colClick
 }
 
-const lineElem = useTemplateRef("lineElem")
-
-function getColXPos(col: number) {
-    if (!lineElem.value) {
-        throw new Error(`getColXPos: lineElement is not mounted`)
-    }
-
-    const halfColumnShift = (props.width / COLS) * 0.5
-    const nColumnsShift = (props.width * col) / COLS
+function getNoteXShift(col: number) {
+    const halfColumnShift = (width.value / COLS) * 0.5
+    const nColumnsShift = (width.value * col) / COLS
     return halfColumnShift + nColumnsShift
 }
 
-function getNoteYPos() {
-    if (!lineElem.value) {
-        throw new Error(`getColYPos: lineElement is not mounted`)
-    }
-
-    return 2 * lineElem.value?.clientHeight
-}
-
-function click(col: number) {
-    delete notes.value[col]
+function getNoteYShift() {
+    return props.height
 }
 
 const isGhostNoteShown = ref(false)
@@ -65,18 +56,49 @@ const ghostNoteCol = ref(0)
 // TODO: add throttle
 function updateGhostNote(e: MouseEvent) {
     isGhostNoteShown.value = true
-    ghostNoteCol.value = getColFromMouseEvent(e)
+    ghostNoteCol.value = getColumnUnderMouseCursor(e)
 }
 
 function hideGhostNote() {
     isGhostNoteShown.value = false
 }
+
+const classes = useCssModule()
+
+function lineClass() {
+    return {
+        [classes.container]: true,
+        [classes.horizontalLine]: props.hasLine,
+    }
+}
+function lineStyles(): StyleValue {
+    return [{ width: width.value + "px", height: props.height + "px" }]
+}
 </script>
 
 <template>
-    <div ref="lineElem" :class="[$style.container, hasLine && $style.horizontalLine]" @mousemove="updateGhostNote" @mouseout="hideGhostNote" @click="onClick">
-        <Note v-for="(_, col) in notes" ref="noteElem" :key="col" :class="$style.note" :x="getColXPos(col)" :y="getNoteYPos()" @click="click(col)" />
-        <Note v-if="isGhostNoteShown" :class="$style.note" :x="getColXPos(ghostNoteCol)" :y="getNoteYPos()" />
+    <div
+        ref="lineElem"
+        :style="lineStyles()"
+        :class="lineClass()"
+        @mousemove="updateGhostNote"
+        @mouseout="hideGhostNote"
+        @click="onClick"
+    >
+        <Note
+            v-for="(_, col) in notes"
+            ref="noteElem"
+            :key="col"
+            :class="$style.note"
+            :x="getNoteXShift(col)"
+            :y="getNoteYShift()"
+        />
+        <Note
+            v-if="isGhostNoteShown"
+            :class="$style.note"
+            :x="getNoteXShift(ghostNoteCol)"
+            :y="getNoteYShift()"
+        />
     </div>
 </template>
 
@@ -84,6 +106,7 @@ function hideGhostNote() {
 .container {
     position: relative;
     height: 100%;
+    width: 100%;
 }
 
 .container:hover {
