@@ -71,7 +71,10 @@ function getNoteXShift(col: number) {
 }
 
 function getNoteYShift() {
-    return lineElem.value?.scrollHeight || 0
+    if (lineElem.value) {
+        return lineElem.value?.offsetHeight * 1.5
+    }
+    return 0
 }
 
 const isGhostNoteShown = ref(false)
