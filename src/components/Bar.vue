@@ -6,8 +6,6 @@ import type { BarNotes } from "./MusicSheet.vue"
 type BarProps = {
     barNotes: BarNotes
     columnsNum: number
-    noteWidth: number
-    noteHeight: number
 }
 defineProps<BarProps>()
 
@@ -45,16 +43,13 @@ const shouldHaveLine = (index: number) => {
     <div
         ref="barRef"
         :class="$style.container"
-        :style="{ maxWidth: columnsNum * noteWidth + 'px' }"
     >
         <BarRow
             v-for="(_, index) in [...Array(LINES_NUM).keys()]"
             :key="`barrow-${index}`"
-            :height="noteHeight"
-            :noteWidth="noteWidth"
             :hasLine="shouldHaveLine(index)"
+            :columns-num="columnsNum"
             :barRowNotes="barNotes[index] || {}"
-            :columnsNum="columnsNum"
             @add-note="(col) => $emit('add-note', index, col)"
         />
     </div>
@@ -65,6 +60,5 @@ const shouldHaveLine = (index: number) => {
     display: flex;
     flex-flow: column nowrap;
     border: 1px solid black;
-    height: 100%;
 }
 </style>

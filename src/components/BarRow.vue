@@ -1,21 +1,41 @@
 <script setup lang="ts">
-import { computed, ref, useCssModule, type StyleValue } from "vue"
+import { onMounted, onUnmounted, ref, useCssModule, useTemplateRef } from "vue"
 import Note from "./Note.vue"
 import type { BarRowNotes } from "./MusicSheet.vue"
 
 const props = defineProps<{
     hasLine: boolean
-    noteWidth: number
     barRowNotes: BarRowNotes
     columnsNum: number
-    height: number
 }>()
 
 const emit = defineEmits<{
     (e: "add-note", col: number): void
 }>()
 
-const width = computed(() => props.columnsNum * props.noteWidth)
+const noteWidth = ref(0)
+const width = ref(0)
+
+const lineElem = useTemplateRef("lineElem")
+const observer = new ResizeObserver(() => {
+    if (!lineElem.value) {
+        return
+    }
+
+    width.value = lineElem.value.scrollWidth
+    noteWidth.value = Math.floor(width.value / props.columnsNum)
+})
+
+onMounted(() => {
+    if (!lineElem.value) {
+        throw new Error(`failed to start check size of MusicSheet`)
+    }
+    observer.observe(lineElem.value)
+})
+
+onUnmounted(() => {
+    observer.disconnect()
+})
 
 function onClick(e: MouseEvent) {
     const clickedColumn = getColumnUnderMouseCursor(e)
@@ -51,7 +71,7 @@ function getNoteXShift(col: number) {
 }
 
 function getNoteYShift() {
-    return props.height
+    return lineElem.value?.scrollHeight || 0
 }
 
 const isGhostNoteShown = ref(false)
@@ -75,15 +95,11 @@ function lineClass() {
         [classes.horizontalLine]: props.hasLine,
     }
 }
-function lineStyles(): StyleValue {
-    return [{ width: width + "px", height: props.height + "px" }]
-}
 </script>
 
 <template>
     <div
         ref="lineElem"
-        :style="lineStyles()"
         :class="lineClass()"
         @mousemove="updateGhostNote"
         @mouseout="hideGhostNote"
@@ -109,8 +125,8 @@ function lineStyles(): StyleValue {
 <style lang="css" scoped module>
 .container {
     position: relative;
-    height: 100%;
-    width: 100%;
+    height: 15px;
+    cursor: pointer;
 }
 
 .container:hover {
