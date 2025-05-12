@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import NoteIcon from "../assets/note.svg"
+import NoteIcon from "@/assets/note.svg"
 defineProps<{
     x: number
     y: number

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import MusicSheet from "./components/MusicSheet.vue"
+import MusicSheet from "./components/MusicSheet/MusicSheet.vue"
 </script>
 
 <template>
