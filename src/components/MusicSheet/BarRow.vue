@@ -118,7 +118,7 @@ function lineClass() {
         />
         <Note
             v-if="isGhostNoteShown"
-            :class="$style.note"
+            :class="[$style.note, $style['ghost-note']]"
             :x="getNoteXShift(ghostNoteCol)"
             :y="getNoteYShift()"
         />
@@ -149,5 +149,9 @@ function lineClass() {
 .note {
     transform: translate(-50%, -100%);
     z-index: -10;
+}
+
+.ghost-note {
+    opacity: 0.6;
 }
 </style>
