@@ -1,5 +1,13 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, useCssModule, useTemplateRef } from "vue"
+import {
+    inject,
+    onMounted,
+    onUnmounted,
+    ref,
+    useCssModule,
+    useTemplateRef,
+    type Component,
+} from "vue"
 import Note from "./Note.vue"
 import type { BarRowNotes } from "./MusicSheet.vue"
 
@@ -98,6 +106,8 @@ function lineClass() {
         [classes.horizontalLine]: props.hasLine,
     }
 }
+
+const BaseNote = inject<Component>("BaseNote")
 </script>
 
 <template>
@@ -109,19 +119,23 @@ function lineClass() {
         @click="onClick"
     >
         <Note
-            v-for="(_, col) in barRowNotes"
+            v-for="(note, col) in barRowNotes"
             ref="noteElem"
             :key="col"
             :class="$style.note"
             :x="getNoteXShift(col)"
             :y="getNoteYShift()"
-        />
+        >
+            <component :is="note.componentPath" />
+        </Note>
         <Note
             v-if="isGhostNoteShown"
             :class="[$style.note, $style['ghost-note']]"
             :x="getNoteXShift(ghostNoteCol)"
             :y="getNoteYShift()"
-        />
+        >
+            <component :is="BaseNote" />
+        </Note>
     </div>
 </template>
 
@@ -147,7 +161,7 @@ function lineClass() {
 }
 
 .note {
-    transform: translate(-50%, -100%);
+    transform: translate(-25%, -100%);
     z-index: -10;
 }
 

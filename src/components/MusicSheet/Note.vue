@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import NoteIcon from "@/assets/note.svg"
 defineProps<{
     x: number
     y: number
@@ -16,14 +15,13 @@ defineEmits<{
         :class="$style['note-wrapper']"
         @click="$emit('delete')"
     >
-        <NoteIcon :class="$style.note" />
+        <slot />
     </div>
 </template>
 
 <style lang="css" scoped module>
 .note-wrapper {
     position: absolute;
-    border: 1px black solid;
     padding: 0px;
     height: fit-content;
 }
