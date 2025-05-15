@@ -1,0 +1,122 @@
+<script setup lang="ts">
+import {
+    ToolbarButton,
+    ToolbarRoot,
+    ToolbarSeparator,
+    ToolbarToggleGroup,
+    ToolbarToggleItem,
+} from "radix-vue"
+import { defaultNoteFractionKey, noteFractionsMap, type NoteFractionKey } from "./noteFractions"
+
+const noteFractionModel = defineModel<NoteFractionKey>("noteFraction", {
+    default: defaultNoteFractionKey,
+})
+
+defineEmits<{ (e: "addTab"): void }>()
+</script>
+
+<template>
+    <ToolbarRoot :class="$style.ToolbarRoot">
+        <ToolbarToggleGroup
+            :class="$style.ToolbarToggleGroup"
+            :model-value="noteFractionModel"
+            @update:model-value="(newVal) => (noteFractionModel = newVal as NoteFractionKey)"
+        >
+            <ToolbarToggleItem
+                v-for="(fraction, key) in noteFractionsMap"
+                :key="key"
+                :value="key"
+                :class="$style.ToolbarToggleItem"
+            >
+                {{ fraction.name }}
+            </ToolbarToggleItem>
+        </ToolbarToggleGroup>
+
+        <ToolbarSeparator :class="$style.ToolbarSeparator" />
+
+        <ToolbarButton
+            :class="$style.ToolbarButton"
+            @click="$emit('addTab')"
+            >Add Tab</ToolbarButton
+        >
+    </ToolbarRoot>
+</template>
+
+<style lang="css" scoped module>
+a,
+button {
+    all: unset;
+}
+
+.ToolbarRoot {
+    display: flex;
+    padding: 10px;
+    width: fit-content;
+    min-width: max-content;
+    border-radius: 6px;
+    background-color: white;
+    box-shadow: 0 2px 10px var(--black-a7);
+}
+
+.ToolbarToggleItem,
+.ToolbarLink,
+.ToolbarButton {
+    flex: 0 0 auto;
+    color: var(--mauve-11);
+    height: 25px;
+    padding: 0 5px;
+    border-radius: 4px;
+    display: inline-flex;
+    font-size: 13px;
+    line-height: 1;
+    align-items: center;
+    justify-content: center;
+}
+.ToolbarToggleItem:hover,
+.ToolbarLink:hover,
+.ToolbarButton:hover {
+    background-color: var(--grass-3);
+    color: var(--grass-11);
+}
+.ToolbarToggleItem:focus,
+.ToolbarLink:focus,
+.ToolbarButton:focus {
+    position: relative;
+    box-shadow: 0 0 0 2px var(--grass-7);
+}
+
+.ToolbarToggleItem {
+    background-color: white;
+    margin-left: 2px;
+}
+.ToolbarToggleItem:first-child {
+    margin-left: 0;
+}
+.ToolbarToggleItem[data-state="on"] {
+    background-color: var(--grass-5);
+    color: var(--grass-11);
+}
+
+.ToolbarSeparator {
+    width: 1px;
+    background-color: var(--mauve-6);
+    margin: 0 10px;
+}
+
+@media (min-width: 520px) {
+    .ToolbarLink {
+        display: inline-flex;
+    }
+}
+
+.ToolbarButton {
+    padding-left: 10px;
+    padding-right: 10px;
+    color: white;
+    background-color: var(--grass-9);
+}
+.ToolbarButton:hover {
+    background-color: var(--grass-10);
+    color: white;
+}
+</style>

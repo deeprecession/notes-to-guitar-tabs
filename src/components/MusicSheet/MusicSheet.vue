@@ -1,48 +1,14 @@
 <script setup lang="ts">
-import { computed, markRaw, provide, ref, shallowRef } from "vue"
 import Bar from "./Bar.vue"
-import { defaultNoteFraction, type NoteFraction } from "./noteFractions"
-import NoteFractionSelector from "./NoteFractionSelector.vue"
+import type { MusicSheetNotes } from "./MusicSheetContainer.vue"
 
-export type BarRowNotes = Record<number, NoteFraction>
-export type BarNotes = Record<number, BarRowNotes>
-export type MusicSheetNotes = BarNotes[]
-
-const notes = ref<MusicSheetNotes>([{}, {}, {}, {}])
-
-function handleAddNote(bar: number, line: number, col: number) {
-    if (notes.value[bar] === undefined) {
-        notes.value[bar] = {}
-    }
-
-    if (notes.value[bar][line] === undefined) {
-        notes.value[bar][line] = {}
-    }
-
-    notes.value[bar][line][col] = selectedFraction.value
-}
-
-const selectedFraction = shallowRef<NoteFraction>(defaultNoteFraction)
-provide(
-    "BaseNote",
-    computed(() => markRaw(selectedFraction.value.componentPath))
-)
-
-const NOTE_COLS = 16
+defineProps<{ noteColumns: number; notes: MusicSheetNotes }>()
+defineEmits<{
+    (e: "add-note", payload: { barInx: number; line: number; col: number }): void
+}>()
 </script>
 
 <template>
-    <NoteFractionSelector
-        v-model="selectedFraction"
-        @update:model-value="(newVal) => (selectedFraction = newVal)"
-    />
-
-    <button
-        :class="$style['add-bar-btn']"
-        @click="notes.push({})"
-    >
-        Add Bar
-    </button>
     <div
         ref="sheet"
         :class="$style.container"
@@ -51,8 +17,8 @@ const NOTE_COLS = 16
             v-for="(barNotes, barInx) in notes"
             :barNotes="barNotes"
             :class="$style.bar"
-            :columns-num="NOTE_COLS"
-            @add-note="(line, col) => handleAddNote(barInx, line, col)"
+            :columns-num="noteColumns"
+            @add-note="(line, col) => $emit('add-note', { barInx, line, col })"
         />
     </div>
 </template>

@@ -9,7 +9,7 @@ import {
     type Component,
 } from "vue"
 import Note from "./Note.vue"
-import type { BarRowNotes } from "./MusicSheet.vue"
+import type { BarRowNotes } from "./MusicSheetContainer.vue"
 
 const props = defineProps<{
     hasLine: boolean

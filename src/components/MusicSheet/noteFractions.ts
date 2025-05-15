@@ -20,6 +20,9 @@ export const noteFractionsMap = {
     sixteenth: { id: 5, fraction: 1 / 16, componentPath: Sixteenth, name: "1/16" },
 } as const satisfies Record<string, NoteFraction>
 
+export type NoteFractionKey = keyof typeof noteFractionsMap
+
 export const noteFractions = Object.values(noteFractionsMap) satisfies NoteFraction[]
 
-export const defaultNoteFraction = noteFractionsMap.whole
+export const defaultNoteFractionKey: NoteFractionKey = "quarter"
+export const defaultNoteFraction = noteFractionsMap[defaultNoteFractionKey]

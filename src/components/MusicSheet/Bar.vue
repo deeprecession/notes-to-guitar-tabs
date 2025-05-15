@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { defineProps, onMounted, onUnmounted, ref, useTemplateRef } from "vue"
 import BarRow from "./BarRow.vue"
-import type { BarNotes } from "./MusicSheet.vue"
+import type { BarNotes } from "./MusicSheetContainer.vue"
 
 type BarProps = {
     barNotes: BarNotes

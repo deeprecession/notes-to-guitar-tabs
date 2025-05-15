@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import MusicSheet from "./components/MusicSheet/MusicSheet.vue"
+import MusicSheetContainer from "./components/MusicSheet/MusicSheetContainer.vue"
 </script>
 
 <template>
-    <MusicSheet />
+    <MusicSheetContainer />
 </template>
 
 <style lang="css" scoped></style>
