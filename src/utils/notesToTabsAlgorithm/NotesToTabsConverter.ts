@@ -6,14 +6,6 @@ export type Tab = (number | null)[]
 export type Chord = Pitch[]
 // type ChordSequence = Chord[]
 
-export type TabMetrics = {
-    tab: Tab
-    firstFret: number
-
-    fretSpan: number
-    pitchesFailed: number
-}
-
 // export function convertChordSequence(fretboard: Fretboard, sequence: ChordSequence): Tab[] {
 //     return sequence.map((chord) => convertChord(fretboard, chord))
 // }
