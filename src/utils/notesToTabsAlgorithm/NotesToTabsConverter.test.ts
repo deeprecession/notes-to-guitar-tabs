@@ -86,8 +86,6 @@ describe("find all tabs for chord", () => {
 
         const tabs = findAllTabsForChord(fretboard, chord)
 
-        console.log(tabs)
-
         const expected: Tab[] = [
             [null, null, null, null, null, 10],
             [null, null, null, null, null, 12],
@@ -124,8 +122,6 @@ describe("find all tabs for chord", () => {
         const chord: Chord = ["G2", "D3", "G3", "A#3", "D4", "G4"]
 
         const tabs = findAllTabsForChord(fretboard, chord)
-
-        console.log(tabs.length)
 
         const expected: Tab = [3, 5, 5, 3, 3, 3]
 
