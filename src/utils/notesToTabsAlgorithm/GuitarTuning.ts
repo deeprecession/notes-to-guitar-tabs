@@ -1,19 +1,5 @@
 import type { Pitch } from "./Pitch"
 
-export type GuitarTuning = {
-    0: Pitch
-    1: Pitch
-    2: Pitch
-    3: Pitch
-    4: Pitch
-    5: Pitch
-}
+export type GuitarTuning = Pitch[]
 
-export const standardTuning: GuitarTuning = {
-    0: "E2",
-    1: "A2",
-    2: "D3",
-    3: "G3",
-    4: "B3",
-    5: "E4",
-} as const
+export const standardTuning: GuitarTuning = ["E2", "A2", "D3", "G3", "B3", "E4"] as const
