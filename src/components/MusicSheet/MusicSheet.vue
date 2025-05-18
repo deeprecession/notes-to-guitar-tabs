@@ -1,10 +1,11 @@
 <script setup lang="ts">
+import { type Pitch } from "../../utils/notesToTabsAlgorithm/Pitch"
 import Bar from "./Bar.vue"
 import type { MusicSheetNotes } from "./MusicSheetContainer.vue"
 
 defineProps<{ noteColumns: number; notes: MusicSheetNotes }>()
 defineEmits<{
-    (e: "add-note", payload: { barInx: number; line: number; col: number }): void
+    (e: "add-note", payload: { barInx: number; pitch: Pitch; col: number }): void
 }>()
 </script>
 
@@ -18,7 +19,7 @@ defineEmits<{
             :barNotes="barNotes"
             :class="$style.bar"
             :columns-num="noteColumns"
-            @add-note="(line, col) => $emit('add-note', { barInx, line, col })"
+            @add-note="(pitch, col) => $emit('add-note', { barInx, pitch, col })"
         />
     </div>
 </template>

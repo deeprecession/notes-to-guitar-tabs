@@ -8,23 +8,37 @@ import {
     type NoteFraction,
     type NoteFractionKey,
 } from "./noteFractions"
+import type { Pitch } from "../../utils/notesToTabsAlgorithm/Pitch"
 
 export type BarRowNotes = Record<number, NoteFraction>
-export type BarNotes = Record<number, BarRowNotes>
+export type BarNotes = {
+    [P in Pitch]?: BarRowNotes
+}
 export type MusicSheetNotes = BarNotes[]
 
-const notes = ref<MusicSheetNotes>([{}, {}, {}, {}])
+const props = defineProps<{
+    modelValue: MusicSheetNotes
+}>()
 
-function handleAddNote(bar: number, line: number, col: number) {
+const emit = defineEmits<{
+    (e: "update:modelValue", value: MusicSheetNotes): void
+}>()
+
+const notes = computed({
+    get: () => props.modelValue,
+    set: (value) => emit("update:modelValue", value),
+})
+
+function handleAddNote(bar: number, pitch: Pitch, col: number) {
     if (notes.value[bar] === undefined) {
         notes.value[bar] = {}
     }
 
-    if (notes.value[bar][line] === undefined) {
-        notes.value[bar][line] = {}
+    if (notes.value[bar][pitch] === undefined) {
+        notes.value[bar][pitch] = {}
     }
 
-    notes.value[bar][line][col] = noteFractionsMap[selectedFractionKey.value]
+    notes.value[bar][pitch][col] = noteFractionsMap[selectedFractionKey.value]
 }
 
 const selectedFractionKey = ref<NoteFractionKey>(defaultNoteFractionKey)
@@ -46,7 +60,7 @@ const NOTE_COLS = 16
         <MusicSheet
             :notes="notes"
             :note-columns="NOTE_COLS"
-            @add-note="({ barInx, line, col }) => handleAddNote(barInx, line, col)"
+            @add-note="({ barInx, pitch: line, col }) => handleAddNote(barInx, line, col)"
         />
     </div>
 </template>

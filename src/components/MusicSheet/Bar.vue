@@ -2,6 +2,33 @@
 import { defineProps, onMounted, onUnmounted, ref, useTemplateRef } from "vue"
 import BarRow from "./BarRow.vue"
 import type { BarNotes } from "./MusicSheetContainer.vue"
+import type { Pitch } from "../../utils/notesToTabsAlgorithm/Pitch"
+
+const pitches: Pitch[] = [
+    "F6",
+    "E6",
+    "D6",
+    "C6",
+    "B5",
+    "A5",
+    "G5",
+    "F5",
+    "E5",
+    "D5",
+    "C5",
+    "B4",
+    "A4",
+    "G4",
+    "F4",
+    "E4",
+    "D4",
+    "C4",
+    "B3",
+    "A3",
+    "G3",
+    "F3",
+    "E3",
+]
 
 type BarProps = {
     barNotes: BarNotes
@@ -31,7 +58,7 @@ onUnmounted(() => {
 })
 
 defineEmits<{
-    (e: "add-note", line: number, col: number): void
+    (e: "add-note", pitch: Pitch, col: number): void
 }>()
 
 const shouldHaveLine = (index: number) => {
@@ -49,8 +76,8 @@ const shouldHaveLine = (index: number) => {
             :key="`barrow-${index}`"
             :hasLine="shouldHaveLine(index)"
             :columns-num="columnsNum"
-            :barRowNotes="barNotes[index] || {}"
-            @add-note="(col) => $emit('add-note', index, col)"
+            :barRowNotes="barNotes[pitches[index]] || {}"
+            @add-note="(col) => $emit('add-note', pitches[index], col)"
         />
     </div>
 </template>
