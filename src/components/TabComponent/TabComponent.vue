@@ -12,7 +12,7 @@ defineProps<{
             v-for="tab in tabs"
             :class="$style.col"
         >
-            <div v-for="num in tab">{{ num === null ? "-" : num }}-------</div>
+            <div v-for="num in [...tab].reverse()">{{ num === null ? "-" : num }}-------</div>
         </div>
     </div>
 </template>

@@ -1,18 +1,26 @@
+import _ from "lodash"
 import type { Fretboard } from "./GuitarFretboard"
 import type { Pitch } from "./Pitch"
+import { calculateMetricsForTab, rankTabs } from "./TabMetrics"
 
 export type Tab = (number | null)[]
 
 export type Chord = Pitch[]
-// type ChordSequence = Chord[]
+export type ChordSequence = Chord[]
 
-// export function convertChordSequence(fretboard: Fretboard, sequence: ChordSequence): Tab[] {
-//     return sequence.map((chord) => convertChord(fretboard, chord))
-// }
-//
-// function convertChord(fretboard: Fretboard, chord: Chord): Tab {
-//     return []
-// }
+export function convertChordSequence(fretboard: Fretboard, sequence: ChordSequence): Tab[] {
+    return sequence.map((chord) => convertChord(fretboard, chord))
+}
+
+function convertChord(fretboard: Fretboard, chord: Chord): Tab {
+    const possibleTabs = findAllTabsForChord(fretboard, chord)
+    const metrics = possibleTabs.map((tab) => {
+        const tabMetrics = calculateMetricsForTab(tab, chord)
+        return _.extend(tab, tabMetrics)
+    })
+    const rankedTabs = rankTabs(metrics)
+    return rankedTabs[0] || []
+}
 
 export function findAllTabsForChord(fretboard: Fretboard, chord: Chord): Tab[] {
     function helper(fretboard: Fretboard, chord: Chord, curSolution: Tab = []): Tab[] {

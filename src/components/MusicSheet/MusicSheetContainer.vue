@@ -18,6 +18,7 @@ export type MusicSheetNotes = BarNotes[]
 
 const props = defineProps<{
     modelValue: MusicSheetNotes
+    noteCols: number
 }>()
 
 const emit = defineEmits<{
@@ -46,8 +47,6 @@ provide(
     "BaseNote",
     computed(() => markRaw(noteFractionsMap[selectedFractionKey.value].componentPath))
 )
-
-const NOTE_COLS = 16
 </script>
 
 <template>
@@ -59,7 +58,7 @@ const NOTE_COLS = 16
         />
         <MusicSheet
             :notes="notes"
-            :note-columns="NOTE_COLS"
+            :note-columns="noteCols"
             @add-note="({ barInx, pitch: line, col }) => handleAddNote(barInx, line, col)"
         />
     </div>

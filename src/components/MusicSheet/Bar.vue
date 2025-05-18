@@ -5,13 +5,6 @@ import type { BarNotes } from "./MusicSheetContainer.vue"
 import type { Pitch } from "../../utils/notesToTabsAlgorithm/Pitch"
 
 const pitches: Pitch[] = [
-    "F6",
-    "E6",
-    "D6",
-    "C6",
-    "B5",
-    "A5",
-    "G5",
     "F5",
     "E5",
     "D5",
@@ -28,6 +21,13 @@ const pitches: Pitch[] = [
     "G3",
     "F3",
     "E3",
+    "D3",
+    "C3",
+    "B2",
+    "A2",
+    "G2",
+    "F2",
+    "E2",
 ]
 
 type BarProps = {
