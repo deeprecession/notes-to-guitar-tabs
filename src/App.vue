@@ -55,7 +55,10 @@ function convertToTabs() {
 
     <h1>Tabs</h1>
     <button @click="convertToTabs">convert to tabs</button>
-    <TabComponent :tabs="tabs" />
+    <TabComponent
+        :tabs="tabs"
+        :guitar-tuning="standardTuning"
+    />
 </template>
 
 <style lang="css" scoped></style>

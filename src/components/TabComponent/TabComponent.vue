@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { ref, watch } from "vue"
 import type { Tab } from "../../utils/notesToTabsAlgorithm/NotesToTabsConverter"
+import type { GuitarTuning } from "../../utils/notesToTabsAlgorithm/GuitarTuning"
 
 const props = defineProps<{
     tabs: Tab[][]
+    guitarTuning: GuitarTuning
 }>()
 
 const curTabInx = ref(new Array(props.tabs.length).fill(0))
@@ -18,6 +20,13 @@ watch(
 
 <template>
     <div :class="$style.container">
+        <div :class="$style.col">
+            Tuning
+            <div v-for="pitch in guitarTuning">
+                {{ pitch }}
+            </div>
+        </div>
+
         <div
             v-for="(tab, tabInx) in tabs"
             :class="$style.col"
