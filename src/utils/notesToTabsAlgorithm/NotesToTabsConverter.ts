@@ -8,7 +8,10 @@ export type Tab = (number | null)[]
 export type Chord = Pitch[]
 export type ChordSequence = Chord[]
 
-export function convertChordSequence(fretboard: Fretboard, sequence: ChordSequence): Tab[] {
+export function getTheBestWayToPlayChordSequence(
+    fretboard: Fretboard,
+    sequence: ChordSequence
+): Tab[] {
     return sequence.map((chord) => convertChord(fretboard, chord))
 }
 
@@ -20,6 +23,23 @@ function convertChord(fretboard: Fretboard, chord: Chord): Tab {
     })
     const rankedTabs = rankTabs(metrics)
     return rankedTabs[0] || []
+}
+
+export function getAllWaysToPlayChordSequence(
+    fretboard: Fretboard,
+    sequence: ChordSequence
+): Tab[][] {
+    return sequence.map((chord) => getAllPosibleWaysToPlayChord(fretboard, chord))
+}
+
+function getAllPosibleWaysToPlayChord(fretboard: Fretboard, chord: Chord): Tab[] {
+    const possibleTabs = findAllTabsForChord(fretboard, chord)
+    const metrics = possibleTabs.map((tab) => {
+        const tabMetrics = calculateMetricsForTab(tab, chord)
+        return _.extend(tab, tabMetrics)
+    })
+    const rankedTabs = rankTabs(metrics)
+    return rankedTabs
 }
 
 export function findAllTabsForChord(fretboard: Fretboard, chord: Chord): Tab[] {

@@ -1,18 +1,42 @@
 <script setup lang="ts">
+import { ref, watch } from "vue"
 import type { Tab } from "../../utils/notesToTabsAlgorithm/NotesToTabsConverter"
 
-defineProps<{
-    tabs: Tab[]
+const props = defineProps<{
+    tabs: Tab[][]
 }>()
+
+const curTabInx = ref(new Array(props.tabs.length).fill(0))
+
+watch(
+    () => props.tabs,
+    () => {
+        curTabInx.value = new Array(props.tabs.length).fill(0)
+    }
+)
 </script>
 
 <template>
     <div :class="$style.container">
         <div
-            v-for="tab in tabs"
+            v-for="(tab, tabInx) in tabs"
             :class="$style.col"
         >
-            <div v-for="num in [...tab].reverse()">{{ num === null ? "-" : num }}-------</div>
+            <button
+                :disabled="!tab[curTabInx[tabInx]] || !tab[curTabInx[tabInx] - 1]"
+                @click="curTabInx[tabInx]--"
+            >
+                ⬆️
+            </button>
+            <div v-for="num in [...tab[curTabInx[tabInx]]].reverse()">
+                {{ num === null ? "-" : num }}--
+            </div>
+            <button
+                :disabled="!tab[curTabInx[tabInx]] || !tab[curTabInx[tabInx] + 1]"
+                @click="curTabInx[tabInx]++"
+            >
+                ⬇️
+            </button>
         </div>
     </div>
 </template>
