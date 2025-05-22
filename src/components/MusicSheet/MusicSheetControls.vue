@@ -12,7 +12,7 @@ const noteFractionModel = defineModel<NoteFractionKey>("noteFraction", {
     default: defaultNoteFractionKey,
 })
 
-defineEmits<{ (e: "addTab"): void }>()
+defineEmits<{ (e: "addTab"): void; (e: "resetSheet"): void }>()
 </script>
 
 <template>
@@ -35,9 +35,17 @@ defineEmits<{ (e: "addTab"): void }>()
         <ToolbarSeparator :class="$style.ToolbarSeparator" />
 
         <ToolbarButton
-            :class="$style.ToolbarButton"
+            :class="$style.AddTabButton"
             @click="$emit('addTab')"
             >Add Tab</ToolbarButton
+        >
+
+        <ToolbarSeparator :class="$style.ToolbarSeparator" />
+
+        <ToolbarButton
+            :class="$style.ResetSheetButton"
+            @click="$emit('resetSheet')"
+            >Reset Sheet</ToolbarButton
         >
     </ToolbarRoot>
 </template>
@@ -60,7 +68,8 @@ button {
 
 .ToolbarToggleItem,
 .ToolbarLink,
-.ToolbarButton {
+.ResetSheetButton,
+.AddTabButton {
     flex: 0 0 auto;
     color: var(--mauve-11);
     height: 25px;
@@ -72,15 +81,15 @@ button {
     align-items: center;
     justify-content: center;
 }
+
 .ToolbarToggleItem:hover,
-.ToolbarLink:hover,
-.ToolbarButton:hover {
+.ToolbarLink:hover {
     background-color: var(--grass-3);
     color: var(--grass-11);
 }
+
 .ToolbarToggleItem:focus,
-.ToolbarLink:focus,
-.ToolbarButton:focus {
+.ToolbarLink:focus {
     position: relative;
     box-shadow: 0 0 0 2px var(--grass-7);
 }
@@ -109,14 +118,27 @@ button {
     }
 }
 
-.ToolbarButton {
+.AddTabButton {
     padding-left: 10px;
     padding-right: 10px;
     color: white;
     background-color: var(--grass-9);
+    cursor: pointer;
 }
-.ToolbarButton:hover {
+.AddTabButton:hover {
     background-color: var(--grass-10);
+    color: white;
+}
+
+.ResetSheetButton {
+    padding-left: 10px;
+    padding-right: 10px;
+    color: white;
+    background-color: var(--red-9);
+    cursor: pointer;
+}
+.ResetSheetButton:hover {
+    background-color: var(--red-10);
     color: white;
 }
 </style>

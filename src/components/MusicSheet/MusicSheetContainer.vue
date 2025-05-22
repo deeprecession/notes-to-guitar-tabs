@@ -47,6 +47,11 @@ provide(
     "BaseNote",
     computed(() => markRaw(noteFractionsMap[selectedFractionKey.value].componentPath))
 )
+
+function resetSheet() {
+    notes.value = notes.value.splice(0, notes.value.length)
+    notes.value.push({})
+}
 </script>
 
 <template>
@@ -55,6 +60,7 @@ provide(
             v-model:note-fraction="selectedFractionKey"
             @update:note-fraction="(newVal) => (selectedFractionKey = newVal)"
             @add-tab="notes.push({})"
+            @reset-sheet="resetSheet"
         />
         <MusicSheet
             :notes="notes"
