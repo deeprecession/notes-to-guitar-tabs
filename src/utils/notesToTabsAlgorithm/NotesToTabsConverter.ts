@@ -1,7 +1,13 @@
 import _ from "lodash"
 import type { Fretboard } from "./GuitarFretboard"
 import type { Pitch } from "./Pitch"
-import { calculateMetricsForTab, rankTabs } from "./TabMetrics"
+import {
+    calculateMetricsForTab,
+    defaultRankTabsParams,
+    rankTabs,
+    type FinedTab,
+    type TabMetrics,
+} from "./TabMetrics"
 
 export type Tab = (number | null)[]
 
@@ -11,11 +17,11 @@ export type ChordSequence = Chord[]
 export function getTheBestWayToPlayChordSequence(
     fretboard: Fretboard,
     sequence: ChordSequence
-): Tab[] {
+): TabMetrics[] {
     return sequence.map((chord) => convertChord(fretboard, chord))
 }
 
-function convertChord(fretboard: Fretboard, chord: Chord): Tab {
+function convertChord(fretboard: Fretboard, chord: Chord): TabMetrics {
     const possibleTabs = findAllTabsForChord(fretboard, chord)
     const metrics = possibleTabs.map((tab) => {
         const tabMetrics = calculateMetricsForTab(tab, chord)
@@ -28,17 +34,26 @@ function convertChord(fretboard: Fretboard, chord: Chord): Tab {
 export function getAllWaysToPlayChordSequence(
     fretboard: Fretboard,
     sequence: ChordSequence
-): Tab[][] {
-    return sequence.map((chord) => getAllPosibleWaysToPlayChord(fretboard, chord))
+): FinedTab[][] {
+    let prevTabPosition: number | null = null
+    return sequence.map((chord) => {
+        const tab = getAllPosibleWaysToPlayChord(fretboard, chord, prevTabPosition)
+        prevTabPosition = tab[0] ? tab[0].firstFret : null
+        return tab
+    })
 }
 
-function getAllPosibleWaysToPlayChord(fretboard: Fretboard, chord: Chord): Tab[] {
+function getAllPosibleWaysToPlayChord(
+    fretboard: Fretboard,
+    chord: Chord,
+    previousTabPosition: number | null = null
+): FinedTab[] {
     const possibleTabs = findAllTabsForChord(fretboard, chord)
     const metrics = possibleTabs.map((tab) => {
         const tabMetrics = calculateMetricsForTab(tab, chord)
         return _.extend(tab, tabMetrics)
     })
-    const rankedTabs = rankTabs(metrics)
+    const rankedTabs = rankTabs(metrics, { ...defaultRankTabsParams, previousTabPosition })
     return rankedTabs
 }
 

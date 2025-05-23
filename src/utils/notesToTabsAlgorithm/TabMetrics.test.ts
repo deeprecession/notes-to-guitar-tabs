@@ -17,6 +17,8 @@ describe("rank tabs", () => {
             maxSpan: 4,
             pitchMissedFine: 100,
             spanFine: 10,
+            previousTabPosition: null,
+            tabShiftFine: 1,
         }
 
         const ranked = rankTabs([tabWithMetrics], params)
@@ -34,6 +36,8 @@ describe("rank tabs", () => {
             maxSpan: 4,
             pitchMissedFine: 100,
             spanFine: 10,
+            previousTabPosition: null,
+            tabShiftFine: 1,
         }
         const ranked = rankTabs([tabWithMetrics], params)
 
@@ -50,6 +54,8 @@ describe("rank tabs", () => {
             maxSpan: 4,
             pitchMissedFine: 100,
             spanFine: 10,
+            previousTabPosition: null,
+            tabShiftFine: 1,
         }
         const ranked = rankTabs([tabWithMetrics], params)
 
@@ -74,6 +80,8 @@ describe("rank tabs", () => {
             maxSpan: 4,
             pitchMissedFine: 100,
             spanFine: 10,
+            previousTabPosition: null,
+            tabShiftFine: 1,
         }
         const ranked = rankTabs([tabWithMetrics1, tabWithMetrics2, tabWithMetrics3], params)
 
@@ -148,6 +156,20 @@ describe("calculate metrics for tab", () => {
 
         const expected: TabMetrics = {
             firstFret: 0,
+            fretSpan: 0,
+            pitchesMissed: 0,
+        }
+        expect(metrics).to.deep.equal(expected)
+    })
+
+    it("should handle zero fret span", () => {
+        const tab: Tab = [3, 3]
+        const chord: Chord = ["C0", "G#0"]
+
+        const metrics = calculateMetricsForTab(tab, chord)
+
+        const expected: TabMetrics = {
+            firstFret: 3,
             fretSpan: 0,
             pitchesMissed: 0,
         }

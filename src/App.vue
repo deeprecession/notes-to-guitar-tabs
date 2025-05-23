@@ -7,13 +7,13 @@ import TabComponent from "./components/TabComponent/TabComponent.vue"
 import {
     getAllWaysToPlayChordSequence,
     type ChordSequence,
-    type Tab,
 } from "./utils/notesToTabsAlgorithm/NotesToTabsConverter"
 import { standardTuning } from "./utils/notesToTabsAlgorithm/GuitarTuning"
 import { computeFretboard } from "./utils/notesToTabsAlgorithm/GuitarFretboard"
 import type { Pitch } from "./utils/notesToTabsAlgorithm/Pitch"
+import type { FinedTab } from "./utils/notesToTabsAlgorithm/TabMetrics"
 
-const tabs = ref<Tab[][]>([])
+const tabs = ref<FinedTab[][]>([])
 const notes = ref<MusicSheetNotes>([{}])
 
 const BAR_COLS = 16

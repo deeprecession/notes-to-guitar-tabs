@@ -28,19 +28,24 @@ type RankTabsParams = {
 
     pitchMissedFine: number
     spanFine: number
+
+    previousTabPosition: number | null
+    tabShiftFine: number
 }
 
-const defaultRankTabsParams: RankTabsParams = {
+export const defaultRankTabsParams: RankTabsParams = {
     maxSpan: 4,
     pitchMissedFine: 100,
     spanFine: 10,
-}
-
-export type FinedTab = Tab & {
-    fine: number
+    previousTabPosition: null,
+    tabShiftFine: 1,
 }
 
 export type TabWithMetrics = Tab & TabMetrics
+
+export type FinedTab = TabWithMetrics & {
+    fine: number
+}
 
 export function rankTabs(
     tabs: TabWithMetrics[],
@@ -56,9 +61,24 @@ export function rankTabs(
 
 function calculateTabFine(
     metrics: TabMetrics,
-    { maxSpan, pitchMissedFine, spanFine }: RankTabsParams = defaultRankTabsParams
+    {
+        maxSpan,
+        pitchMissedFine,
+        spanFine,
+        previousTabPosition,
+        tabShiftFine,
+    }: RankTabsParams = defaultRankTabsParams
 ): number {
     const spanExeededOn = Math.max(0, metrics.fretSpan - maxSpan)
-    const fine = spanExeededOn * spanFine + pitchMissedFine * metrics.pitchesMissed
+
+    let tabsShifted = 0
+    if (previousTabPosition !== null && previousTabPosition !== 0) {
+        tabsShifted = Math.abs(metrics.firstFret - previousTabPosition)
+    }
+
+    const fine =
+        spanExeededOn * spanFine +
+        pitchMissedFine * metrics.pitchesMissed +
+        tabsShifted * tabShiftFine
     return fine
 }

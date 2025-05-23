@@ -1,7 +1,75 @@
 import { describe, expect, it } from "vitest"
-import { findAllTabsForChord, type Chord, type Tab } from "./NotesToTabsConverter"
+import {
+    findAllTabsForChord,
+    getAllWaysToPlayChordSequence,
+    type Chord,
+    type ChordSequence,
+    type Tab,
+} from "./NotesToTabsConverter"
 import { standardTuning } from "./GuitarTuning"
 import { computeFretboard } from "./GuitarFretboard"
+
+describe("get all ways to play chord with previous tab position", () => {
+    it("should sort to the knowing that previous positon was at 12ve fret", () => {
+        const fretboard = computeFretboard(standardTuning)
+        const chord: ChordSequence = [["E5"], ["F#4"]]
+
+        const tabs = getAllWaysToPlayChordSequence(fretboard, chord)
+
+        const expected: Tab[] = [
+            [null, null, null, 11, null, null],
+            [null, null, null, null, 7, null],
+            [null, null, null, null, null, 2],
+        ]
+
+        expect(tabs[1]).to.deep.equal(expected)
+    })
+
+    it("should sort to the knowing that previous positon was at 1st fret", () => {
+        const fretboard = computeFretboard(standardTuning)
+        const chord: ChordSequence = [["F4"], ["F#4"]]
+
+        const tabs = getAllWaysToPlayChordSequence(fretboard, chord)
+
+        const expected: Tab[] = [
+            [null, null, null, null, null, 2],
+            [null, null, null, null, 7, null],
+            [null, null, null, 11, null, null],
+        ]
+
+        expect(tabs[1]).to.deep.equal(expected)
+    })
+
+    it("should sort to the knowing that previous positon was at 8th fret", () => {
+        const fretboard = computeFretboard(standardTuning)
+        const chord: ChordSequence = [["C5"], ["F#4"]]
+
+        const tabs = getAllWaysToPlayChordSequence(fretboard, chord)
+
+        const expected: Tab[] = [
+            [null, null, null, null, 7, null],
+            [null, null, null, 11, null, null],
+            [null, null, null, null, null, 2],
+        ]
+
+        expect(tabs[1]).to.deep.equal(expected)
+    })
+
+    it("should sort to the knowing that previous positon was at 5th fret", () => {
+        const fretboard = computeFretboard(standardTuning)
+        const chord: ChordSequence = [["A4"], ["F#4"]]
+
+        const tabs = getAllWaysToPlayChordSequence(fretboard, chord)
+
+        const expected: Tab[] = [
+            [null, null, null, null, 7, null],
+            [null, null, null, null, null, 2],
+            [null, null, null, 11, null, null],
+        ]
+
+        expect(tabs[1]).to.deep.equal(expected)
+    })
+})
 
 describe("find all tabs for chord", () => {
     it("should have no solution for pitch outside fretboard", () => {
