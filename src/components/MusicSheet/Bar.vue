@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, onMounted, onUnmounted, ref, useTemplateRef } from "vue"
+import { onMounted, onUnmounted, ref, useTemplateRef } from "vue"
 import BarRow from "./BarRow.vue"
 import type { BarNotes } from "./MusicSheetContainer.vue"
 import type { Pitch } from "../../utils/notesToTabsAlgorithm/Pitch"
@@ -59,6 +59,7 @@ onUnmounted(() => {
 
 defineEmits<{
     (e: "add-note", pitch: Pitch, col: number): void
+    (e: "remove-note", pitch: Pitch, col: number): void
 }>()
 
 const shouldHaveLine = (index: number) => {
@@ -78,6 +79,7 @@ const shouldHaveLine = (index: number) => {
             :columns-num="columnsNum"
             :barRowNotes="barNotes[pitches[index]] || {}"
             @add-note="(col) => $emit('add-note', pitches[index], col)"
+            @remove-note="(col) => $emit('remove-note', pitches[index], col)"
         />
     </div>
 </template>

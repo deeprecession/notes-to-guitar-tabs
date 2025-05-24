@@ -12,7 +12,16 @@ const noteFractionModel = defineModel<NoteFractionKey>("noteFraction", {
     default: defaultNoteFractionKey,
 })
 
-defineEmits<{ (e: "addTab"): void; (e: "resetSheet"): void }>()
+const interactionMode = defineModel<InteractionMode>("interactionMode", {
+    default: "insert",
+})
+
+export type InteractionMode = "remove" | "insert"
+
+defineEmits<{
+    (e: "addTab"): void
+    (e: "resetSheet"): void
+}>()
 </script>
 
 <template>
@@ -47,6 +56,23 @@ defineEmits<{ (e: "addTab"): void; (e: "resetSheet"): void }>()
             @click="$emit('resetSheet')"
             >Reset Sheet</ToolbarButton
         >
+
+        <ToolbarSeparator :class="$style.ToolbarSeparator" />
+
+        <ToolbarButton
+            v-if="interactionMode === 'insert'"
+            :class="$style.AddTabButton"
+            @click="$emit('update:interactionMode', 'remove')"
+        >
+            Switch to Remove mode
+        </ToolbarButton>
+        <ToolbarButton
+            v-if="interactionMode === 'remove'"
+            :class="$style.ResetSheetButton"
+            @click="$emit('update:interactionMode', 'insert')"
+        >
+            Switch to Insert mode
+        </ToolbarButton>
     </ToolbarRoot>
 </template>
 

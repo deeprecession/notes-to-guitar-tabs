@@ -6,6 +6,7 @@ import type { MusicSheetNotes } from "./MusicSheetContainer.vue"
 defineProps<{ noteColumns: number; notes: MusicSheetNotes }>()
 defineEmits<{
     (e: "add-note", payload: { barInx: number; pitch: Pitch; col: number }): void
+    (e: "remove-note", payload: { barInx: number; pitch: Pitch; col: number }): void
 }>()
 </script>
 
@@ -20,6 +21,7 @@ defineEmits<{
             :class="$style.bar"
             :columns-num="noteColumns"
             @add-note="(pitch, col) => $emit('add-note', { barInx, pitch, col })"
+            @remove-note="(pitch, col) => $emit('remove-note', { barInx, pitch, col })"
         />
     </div>
 </template>

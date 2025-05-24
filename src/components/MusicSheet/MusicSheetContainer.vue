@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import MusicSheet from "./MusicSheet.vue"
-import MusicSheetControls from "./MusicSheetControls.vue"
-import { computed, markRaw, provide, ref } from "vue"
+import MusicSheetControls, { type InteractionMode } from "./MusicSheetControls.vue"
+import { computed, markRaw, provide, ref, type Ref } from "vue"
 import {
     defaultNoteFractionKey,
     noteFractionsMap,
@@ -42,6 +42,18 @@ function handleAddNote(bar: number, pitch: Pitch, col: number) {
     notes.value[bar][pitch][col] = noteFractionsMap[selectedFractionKey.value]
 }
 
+function handleRemoveNote(bar: number, pitch: Pitch, col: number) {
+    if (notes.value[bar] === undefined) {
+        return
+    }
+
+    if (notes.value[bar][pitch] === undefined) {
+        return
+    }
+
+    delete notes.value[bar][pitch][col]
+}
+
 const selectedFractionKey = ref<NoteFractionKey>(defaultNoteFractionKey)
 provide(
     "BaseNote",
@@ -52,13 +64,19 @@ function resetSheet() {
     notes.value = notes.value.splice(0, notes.value.length)
     notes.value.push({})
 }
+
+const interactionMode = ref<InteractionMode>("insert")
+
+provide<Ref<InteractionMode>>("interaction-mode", interactionMode)
 </script>
 
 <template>
     <div :class="$style.container">
         <MusicSheetControls
+            v-model:interaction-mode="interactionMode"
             v-model:note-fraction="selectedFractionKey"
-            @update:note-fraction="(newVal) => (selectedFractionKey = newVal)"
+            @update:interaction-mode="(mode) => (interactionMode = mode)"
+            @update:note-fraction="(fraction) => (selectedFractionKey = fraction)"
             @add-tab="notes.push({})"
             @reset-sheet="resetSheet"
         />
@@ -66,6 +84,7 @@ function resetSheet() {
             :notes="notes"
             :note-columns="noteCols"
             @add-note="({ barInx, pitch: line, col }) => handleAddNote(barInx, line, col)"
+            @remove-note="({ barInx, pitch: line, col }) => handleRemoveNote(barInx, line, col)"
         />
     </div>
 </template>

@@ -3,17 +3,12 @@ defineProps<{
     x: number
     y: number
 }>()
-
-defineEmits<{
-    (e: "delete"): void
-}>()
 </script>
 
 <template>
     <div
         :style="{ left: `${x}px`, top: `${y}px` }"
         :class="$style['note-wrapper']"
-        @click="$emit('delete')"
     >
         <slot />
     </div>

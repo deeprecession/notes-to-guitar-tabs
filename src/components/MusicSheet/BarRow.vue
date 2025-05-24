@@ -7,9 +7,13 @@ import {
     useCssModule,
     useTemplateRef,
     type Component,
+    type Ref,
 } from "vue"
 import Note from "./Note.vue"
 import type { BarRowNotes } from "./MusicSheetContainer.vue"
+import type { InteractionMode } from "./MusicSheetControls.vue"
+
+const mode = inject<Ref<InteractionMode>>("interaction-mode", ref("insert"))
 
 const props = defineProps<{
     hasLine: boolean
@@ -19,6 +23,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
     (e: "add-note", col: number): void
+    (e: "remove-note", col: number): void
 }>()
 
 const noteWidth = ref(0)
@@ -47,7 +52,12 @@ onUnmounted(() => {
 
 function onClick(e: MouseEvent) {
     const clickedColumn = getColumnUnderMouseCursor(e)
-    emit("add-note", clickedColumn)
+
+    if (mode.value === "remove") {
+        emit("remove-note", clickedColumn)
+    } else {
+        emit("add-note", clickedColumn)
+    }
 }
 
 function getColumnUnderMouseCursor(e: MouseEvent) {
@@ -89,12 +99,14 @@ const isGhostNoteShown = ref(false)
 const ghostNoteCol = ref(0)
 
 // TODO: add throttle
-function updateGhostNote(e: MouseEvent) {
+function onMouseMove(e: MouseEvent) {
+    if (mode.value === "remove") return
+
     isGhostNoteShown.value = true
     ghostNoteCol.value = getColumnUnderMouseCursor(e)
 }
 
-function hideGhostNote() {
+function onMouseOut() {
     isGhostNoteShown.value = false
 }
 
@@ -114,17 +126,19 @@ const BaseNote = inject<Component>("BaseNote")
     <div
         ref="lineElem"
         :class="lineClass()"
-        @mousemove="updateGhostNote"
-        @mouseout="hideGhostNote"
+        @mousemove="onMouseMove"
+        @mouseout="onMouseOut"
         @click="onClick"
     >
         <Note
             v-for="(note, col) in barRowNotes"
             ref="noteElem"
             :key="col"
-            :class="$style.note"
+            :class="[$style.note, { [$style['note-remove-mode']]: mode === 'remove' }]"
             :x="getNoteXShift(col)"
             :y="getNoteYShift()"
+            :col="col"
+            @remove-note="$emit('remove-note', col)"
         >
             <component :is="note.componentPath" />
         </Note>
@@ -133,6 +147,7 @@ const BaseNote = inject<Component>("BaseNote")
             :class="[$style.note, $style['ghost-note']]"
             :x="getNoteXShift(ghostNoteCol)"
             :y="getNoteYShift()"
+            :col="ghostNoteCol"
         >
             <component :is="BaseNote" />
         </Note>
@@ -158,6 +173,10 @@ const BaseNote = inject<Component>("BaseNote")
     border-bottom: 2px solid #000;
     transform: translateY(-50%);
     width: 100%;
+}
+
+.note-remove-mode {
+    background-color: red;
 }
 
 .note {
