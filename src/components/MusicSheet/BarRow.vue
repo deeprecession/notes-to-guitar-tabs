@@ -1,17 +1,9 @@
 <script setup lang="ts">
-import {
-    inject,
-    onMounted,
-    onUnmounted,
-    ref,
-    useCssModule,
-    useTemplateRef,
-    type Component,
-    type Ref,
-} from "vue"
+import { inject, onMounted, onUnmounted, ref, useCssModule, useTemplateRef, type Ref } from "vue"
 import Note from "./Note.vue"
 import type { BarRowNotes } from "./MusicSheetContainer.vue"
 import type { InteractionMode } from "./MusicSheetControls.vue"
+import { defaultNoteFraction, type NoteFraction } from "./noteFractions"
 
 const mode = inject<Ref<InteractionMode>>("interaction-mode", ref("insert"))
 
@@ -119,7 +111,7 @@ function lineClass() {
     }
 }
 
-const BaseNote = inject<Component>("BaseNote")
+const selectedNoteFraction = inject<NoteFraction>("noteFraction", defaultNoteFraction)
 </script>
 
 <template>
@@ -140,7 +132,10 @@ const BaseNote = inject<Component>("BaseNote")
             :col="col"
             @remove-note="$emit('remove-note', col)"
         >
-            <component :is="note.componentPath" />
+            <img
+                :src="`/src/assets/${note.iconName}.svg`"
+                :alt="note.name"
+            />
         </Note>
         <Note
             v-if="isGhostNoteShown"
@@ -149,7 +144,10 @@ const BaseNote = inject<Component>("BaseNote")
             :y="getNoteYShift()"
             :col="ghostNoteCol"
         >
-            <component :is="BaseNote" />
+            <img
+                :src="`/src/assets/${selectedNoteFraction.iconName}.svg`"
+                :alt="selectedNoteFraction.name"
+            />
         </Note>
     </div>
 </template>

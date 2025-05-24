@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import MusicSheet from "./MusicSheet.vue"
 import MusicSheetControls, { type InteractionMode } from "./MusicSheetControls.vue"
-import { computed, markRaw, provide, ref, type Ref } from "vue"
+import { computed, provide, ref, type Ref } from "vue"
 import {
     defaultNoteFractionKey,
     noteFractionsMap,
@@ -56,8 +56,8 @@ function handleRemoveNote(bar: number, pitch: Pitch, col: number) {
 
 const selectedFractionKey = ref<NoteFractionKey>(defaultNoteFractionKey)
 provide(
-    "BaseNote",
-    computed(() => markRaw(noteFractionsMap[selectedFractionKey.value].componentPath))
+    "noteFraction",
+    computed(() => noteFractionsMap[selectedFractionKey.value])
 )
 
 function resetSheet() {

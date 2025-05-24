@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue"
+import { onMounted, ref, watch } from "vue"
 import MusicSheetContainer, {
     type MusicSheetNotes,
 } from "./components/MusicSheet/MusicSheetContainer.vue"
@@ -15,6 +15,26 @@ import type { FinedTab } from "./utils/notesToTabsAlgorithm/TabMetrics"
 
 const tabs = ref<FinedTab[][]>([])
 const notes = ref<MusicSheetNotes>([{}])
+
+watch(
+    notes,
+    (newNotes) => {
+        localStorage.setItem("musicSheetNotes", JSON.stringify(newNotes))
+    },
+    { deep: true }
+)
+
+onMounted(() => {
+    const storedNotes = localStorage.getItem("musicSheetNotes")
+    if (storedNotes) {
+        try {
+            const parsed = JSON.parse(storedNotes)
+            notes.value = parsed
+        } catch (e) {
+            console.error("Failed to parse stored notes", e)
+        }
+    }
+})
 
 const BAR_COLS = 16
 
