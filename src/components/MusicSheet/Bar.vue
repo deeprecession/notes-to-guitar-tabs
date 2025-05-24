@@ -4,7 +4,7 @@ import BarRow from "./BarRow.vue"
 import type { BarNotes } from "./MusicSheetContainer.vue"
 import type { Pitch } from "../../utils/notesToTabsAlgorithm/Pitch"
 
-const pitches: Pitch[] = [
+const barPitches: Pitch[] = [
     "F5",
     "E5",
     "D5",
@@ -77,9 +77,9 @@ const shouldHaveLine = (index: number) => {
             :key="`barrow-${index}`"
             :hasLine="shouldHaveLine(index)"
             :columns-num="columnsNum"
-            :barRowNotes="barNotes[pitches[index]] || {}"
-            @add-note="(col) => $emit('add-note', pitches[index], col)"
-            @remove-note="(col) => $emit('remove-note', pitches[index], col)"
+            :barRowNotes="barNotes[barPitches[index]] || {}"
+            @add-note="(col) => $emit('add-note', barPitches[index], col)"
+            @remove-note="(col) => $emit('remove-note', barPitches[index], col)"
         />
     </div>
 </template>

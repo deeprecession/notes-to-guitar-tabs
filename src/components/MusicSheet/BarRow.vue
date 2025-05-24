@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { inject, onMounted, onUnmounted, ref, useCssModule, useTemplateRef, type Ref } from "vue"
+import { inject, ref, useCssModule, useTemplateRef, type Ref } from "vue"
 import Note from "./Note.vue"
 import type { BarRowNotes } from "./MusicSheetContainer.vue"
 import type { InteractionMode } from "./MusicSheetControls.vue"
 import { defaultNoteFraction, type NoteFraction } from "./noteFractions"
+import { useSizeObserver } from "../../composables/sizeObserver"
 
 const mode = inject<Ref<InteractionMode>>("interaction-mode", ref("insert"))
 
@@ -18,29 +19,8 @@ const emit = defineEmits<{
     (e: "remove-note", col: number): void
 }>()
 
-const noteWidth = ref(0)
-const width = ref(0)
-
 const lineElem = useTemplateRef("lineElem")
-const observer = new ResizeObserver(() => {
-    if (!lineElem.value) {
-        return
-    }
-
-    width.value = lineElem.value.scrollWidth
-    noteWidth.value = Math.floor(width.value / props.columnsNum)
-})
-
-onMounted(() => {
-    if (!lineElem.value) {
-        throw new Error(`failed to start check size of MusicSheet`)
-    }
-    observer.observe(lineElem.value)
-})
-
-onUnmounted(() => {
-    observer.disconnect()
-})
+const { scrollWidth } = useSizeObserver(lineElem)
 
 function onClick(e: MouseEvent) {
     const clickedColumn = getColumnUnderMouseCursor(e)
@@ -75,8 +55,8 @@ function getColumnUnderMouseCursor(e: MouseEvent) {
 }
 
 function getNoteXShift(col: number) {
-    const halfColumnShift = (width.value / props.columnsNum) * 0.5
-    const nColumnsShift = (width.value * col) / props.columnsNum
+    const halfColumnShift = (scrollWidth.value / props.columnsNum) * 0.5
+    const nColumnsShift = (scrollWidth.value * col) / props.columnsNum
     return halfColumnShift + nColumnsShift
 }
 
