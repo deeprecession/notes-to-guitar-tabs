@@ -30,7 +30,7 @@ type RankTabsParams = {
     spanFine: number
 
     previousTabPosition: number | null
-    tabShiftFine: number
+    fretShiftFine: number
 }
 
 export const defaultRankTabsParams: RankTabsParams = {
@@ -38,7 +38,7 @@ export const defaultRankTabsParams: RankTabsParams = {
     pitchMissedFine: 100,
     spanFine: 10,
     previousTabPosition: null,
-    tabShiftFine: 1,
+    fretShiftFine: 1,
 }
 
 export type TabWithMetrics = Tab & TabMetrics
@@ -66,7 +66,7 @@ function calculateTabFine(
         pitchMissedFine,
         spanFine,
         previousTabPosition,
-        tabShiftFine,
+        fretShiftFine,
     }: RankTabsParams = defaultRankTabsParams
 ): number {
     const spanExeededOn = Math.max(0, metrics.fretSpan - maxSpan)
@@ -79,6 +79,6 @@ function calculateTabFine(
     const fine =
         spanExeededOn * spanFine +
         pitchMissedFine * metrics.pitchesMissed +
-        tabsShifted * tabShiftFine
+        tabsShifted * fretShiftFine
     return fine
 }

@@ -18,7 +18,7 @@ describe("rank tabs", () => {
             pitchMissedFine: 100,
             spanFine: 10,
             previousTabPosition: null,
-            tabShiftFine: 1,
+            fretShiftFine: 1,
         }
 
         const ranked = rankTabs([tabWithMetrics], params)
@@ -37,7 +37,7 @@ describe("rank tabs", () => {
             pitchMissedFine: 100,
             spanFine: 10,
             previousTabPosition: null,
-            tabShiftFine: 1,
+            fretShiftFine: 1,
         }
         const ranked = rankTabs([tabWithMetrics], params)
 
@@ -55,7 +55,7 @@ describe("rank tabs", () => {
             pitchMissedFine: 100,
             spanFine: 10,
             previousTabPosition: null,
-            tabShiftFine: 1,
+            fretShiftFine: 1,
         }
         const ranked = rankTabs([tabWithMetrics], params)
 
@@ -81,13 +81,31 @@ describe("rank tabs", () => {
             pitchMissedFine: 100,
             spanFine: 10,
             previousTabPosition: null,
-            tabShiftFine: 1,
+            fretShiftFine: 1,
         }
         const ranked = rankTabs([tabWithMetrics1, tabWithMetrics2, tabWithMetrics3], params)
 
         expect(ranked[0].fine).to.equal(100)
         expect(ranked[1].fine).to.equal(120)
         expect(ranked[2].fine).to.equal(140)
+    })
+
+    it("if next string is open string then fine for", () => {
+        const tab: Tab = [4, 0]
+        const metrics: TabMetrics = { firstFret: 0, fretSpan: 0, pitchesMissed: 0 }
+        const tabWithMetrics: TabWithMetrics = _.extend(tab, metrics)
+
+        const params = {
+            maxSpan: 4,
+            pitchMissedFine: 100,
+            spanFine: 10,
+            previousTabPosition: null,
+            fretShiftFine: 1,
+        }
+        const ranked = rankTabs([tabWithMetrics], params)
+
+        const expectedFine = 0
+        expect(ranked[0].fine).to.equal(expectedFine)
     })
 })
 
