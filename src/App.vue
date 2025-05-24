@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from "vue"
+import { ref } from "vue"
 import MusicSheetContainer, {
     type MusicSheetNotes,
 } from "./components/MusicSheet/MusicSheetContainer.vue"
@@ -12,29 +12,10 @@ import { standardTuning } from "./utils/notesToTabsAlgorithm/GuitarTuning"
 import { computeFretboard } from "./utils/notesToTabsAlgorithm/GuitarFretboard"
 import type { Pitch } from "./utils/notesToTabsAlgorithm/Pitch"
 import type { FinedTab } from "./utils/notesToTabsAlgorithm/TabMetrics"
+import { useNotesStorage } from "./composables/notesStorage"
 
 const tabs = ref<FinedTab[][]>([])
-const notes = ref<MusicSheetNotes>([{}])
-
-watch(
-    notes,
-    (newNotes) => {
-        localStorage.setItem("musicSheetNotes", JSON.stringify(newNotes))
-    },
-    { deep: true }
-)
-
-onMounted(() => {
-    const storedNotes = localStorage.getItem("musicSheetNotes")
-    if (storedNotes) {
-        try {
-            const parsed = JSON.parse(storedNotes)
-            notes.value = parsed
-        } catch (e) {
-            console.error("Failed to parse stored notes", e)
-        }
-    }
-})
+const notes = useNotesStorage()
 
 const BAR_COLS = 16
 
@@ -62,7 +43,6 @@ function convertToTabs() {
     const fretboard = computeFretboard(standardTuning)
 
     tabs.value = getAllWaysToPlayChordSequence(fretboard, sequence)
-    console.log(tabs.value)
 }
 </script>
 
