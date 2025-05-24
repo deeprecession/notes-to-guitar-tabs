@@ -70,7 +70,7 @@ describe("get all ways to play chord with previous tab position", () => {
         expect(tabs[1]).to.deep.equal(expected)
     })
 
-    it("it should still memorize previous chord when there are epmty chords between two chords", () => {
+    it("should still memorize previous chord when there are epmty chords between two chords", () => {
         const fretboard = computeFretboard(standardTuning)
         const chord: ChordSequence = [["E5"], [], [], ["F#4"]]
 
@@ -83,6 +83,21 @@ describe("get all ways to play chord with previous tab position", () => {
         ]
 
         expect(tabs[3]).to.deep.equal(expected)
+    })
+
+    it("should suggest to play open string firstly, and then other strings", () => {
+        const fretboard = computeFretboard(standardTuning)
+        const chord: ChordSequence = [["E5"], ["E4"]]
+
+        const tabs = getAllWaysToPlayChordSequence(fretboard, chord)
+
+        const expected: Tab[] = [
+            [null, null, null, null, null, 0],
+            [null, null, null, 9, null, null],
+            [null, null, null, null, 5, null],
+        ]
+
+        expect(tabs[1]).to.deep.equal(expected)
     })
 })
 

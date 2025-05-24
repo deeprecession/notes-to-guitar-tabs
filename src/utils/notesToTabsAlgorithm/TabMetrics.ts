@@ -72,7 +72,7 @@ function calculateTabFine(
     const spanExeededOn = Math.max(0, metrics.fretSpan - maxSpan)
 
     let tabsShifted = 0
-    if (previousTabPosition !== null && previousTabPosition !== 0) {
+    if (previousTabPosition !== null && previousTabPosition !== 0 && metrics.firstFret !== 0) {
         tabsShifted = Math.abs(metrics.firstFret - previousTabPosition)
     }
 
