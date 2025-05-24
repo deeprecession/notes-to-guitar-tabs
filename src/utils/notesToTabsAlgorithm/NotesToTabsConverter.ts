@@ -38,7 +38,11 @@ export function getAllWaysToPlayChordSequence(
     let prevTabPosition: number | null = null
     return sequence.map((chord) => {
         const tab = getAllPosibleWaysToPlayChord(fretboard, chord, prevTabPosition)
-        prevTabPosition = tab[0] ? tab[0].firstFret : null
+
+        if (tab[0].firstFret) {
+            prevTabPosition = tab[0].firstFret
+        }
+
         return tab
     })
 }
