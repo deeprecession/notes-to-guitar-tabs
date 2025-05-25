@@ -5,7 +5,6 @@ import type { BarNotes } from "./MusicSheetContainer.vue"
 import type { Pitch } from "../../entities/Pitch"
 
 const barPitches: Pitch[] = [
-    "F5",
     "E5",
     "D5",
     "C5",
@@ -36,7 +35,7 @@ type BarProps = {
 }
 defineProps<BarProps>()
 
-const LINES_NUM = 23
+const LINES_NUM = 22
 
 const barElem = useTemplateRef("barRef")
 const barWidth = ref(0)

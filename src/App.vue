@@ -7,7 +7,6 @@ import TabComponent from "./components/TabComponent/TabComponent.vue"
 import { getAllWaysToPlayChordSequence } from "./utils/notesToTabsAlgorithm/NotesToTabsConverter"
 import type { FinedTab } from "./utils/notesToTabsAlgorithm/TabMetrics"
 import { useNotesStorage } from "./composables/notesStorage"
-import BarVisuals from "./components/MusicSheet/BarVisuals.vue"
 import type { ChordSequence } from "./entities/ChordSequence"
 import type { Pitch } from "./entities/Pitch"
 import { standardTuning } from "./entities/GuitarTuning"
@@ -46,7 +45,6 @@ function convertToTabs() {
 </script>
 
 <template>
-    <BarVisuals :notes="notes[0]" />
     <h1>Music sheet</h1>
     <MusicSheetContainer
         :note-cols="BAR_COLS"

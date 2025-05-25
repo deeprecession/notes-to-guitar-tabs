@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Pitch } from "../../entities/Pitch"
-import Bar from "./Bar.vue"
+import BarVisuals from "./BarVisuals.vue"
 import type { MusicSheetNotes } from "./MusicSheetContainer.vue"
 
 defineProps<{ noteColumns: number; notes: MusicSheetNotes }>()
@@ -15,13 +15,19 @@ defineEmits<{
         ref="sheet"
         :class="$style.container"
     >
-        <Bar
-            v-for="(barNotes, barInx) in notes"
-            :barNotes="barNotes"
+        <!-- <Bar -->
+        <!--     v-for="(barNotes, barInx) in notes" -->
+        <!--     :barNotes="barNotes" -->
+        <!--     :class="$style.bar" -->
+        <!--     :columns-num="noteColumns" -->
+        <!--     @add-note="(pitch, col) => $emit('add-note', { barInx, pitch, col })" -->
+        <!--     @remove-note="(pitch, col) => $emit('remove-note', { barInx, pitch, col })" -->
+        <!-- /> -->
+
+        <BarVisuals
+            v-for="barNotes in notes"
+            :notes="barNotes"
             :class="$style.bar"
-            :columns-num="noteColumns"
-            @add-note="(pitch, col) => $emit('add-note', { barInx, pitch, col })"
-            @remove-note="(pitch, col) => $emit('remove-note', { barInx, pitch, col })"
         />
     </div>
 </template>
@@ -54,5 +60,6 @@ defineEmits<{
 .bar {
     flex: 1;
     min-width: 300px;
+    min-height: 180px;
 }
 </style>

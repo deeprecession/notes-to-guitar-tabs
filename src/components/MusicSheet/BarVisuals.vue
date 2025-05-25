@@ -1,10 +1,16 @@
 <script setup lang="ts">
-import { ref } from "vue"
-import { getCellAtPoint, getCellRect } from "./gridGeometry"
+import { computed, ref } from "vue"
+import { getCellAtPoint } from "./gridGeometry"
 import { type BarNotes } from "./MusicSheetContainer.vue"
 import type { Pitch } from "../../entities/Pitch"
+import { useSizeObserver } from "../../composables/sizeObserver"
+import CellHighlight from "./CellHighlight.vue"
 
 defineProps<{ notes: BarNotes }>()
+
+const emit = defineEmits<{
+    (e: "add-note", pitch: Pitch, col: number): void
+}>()
 
 const pitches: Pitch[] = [
     "E5",
@@ -33,110 +39,85 @@ const pitches: Pitch[] = [
 
 const cols = 16
 
-const width = 480
-const height = 210
-const rows = 22
-const rowsAboveStaff = (rows - 9) / 2
-const rowHeight = height / rows
-const startY = rowsAboveStaff * rowHeight
-
 const gridContainer = ref<HTMLElement | null>(null)
 
-function onMouseMove(e: MouseEvent) {
+const { scrollWidth: containerWidth, scrollHeight: containerHeight } =
+    useSizeObserver(gridContainer)
+
+const rows = pitches.length
+const rowsAboveStaff = (rows - 9) / 2
+const rowHeight = computed(() => containerHeight.value / rows)
+const startY = computed(() => rowsAboveStaff * rowHeight.value)
+
+function notePositionStyle(pitch: Pitch, col: number) {
+    const row = pitches.indexOf(pitch)
+    return {
+        left: `${(col / cols) * 100}%`,
+        top: `${(row / rows) * 100}%`,
+        width: `${100 / cols}%`,
+        height: `${100 / rows}%`,
+    }
+}
+
+function addNoteUnderMouse(e: MouseEvent) {
     if (!gridContainer.value) return
 
     const bounds = gridContainer.value.getBoundingClientRect()
     const x = e.clientX - bounds.left
     const y = e.clientY - bounds.top
 
-    updateHoverCell(x, y)
+    const { col, row } = getCellAtPoint(
+        { cols, rows, width: containerWidth.value, height: containerHeight.value },
+        x,
+        y
+    )
+    const pitch = pitches[row]
+
+    emit("add-note", pitch, col)
 }
 
-type HoverCell = {
-    isShown: boolean
-    x: number
-    y: number
-    width: number
-    height: number
-}
-
-const hoverCell = ref<HoverCell>({ isShown: false, x: 0, y: 0, width: 0, height: 0 })
-
-function updateHoverCell(x: number, y: number) {
-    const cell: HoverCell = {
-        ...getCellAtPoint({ cols, rows, width, height }, x, y),
-        isShown: true,
-    }
-    hoverCell.value = cell
-}
-
-function hideHoverCell() {
-    hoverCell.value.isShown = false
-}
-
-function onMouseOut() {
-    hideHoverCell()
-}
-
-function notePositionStyle(pitch: Pitch, col: number) {
-    const row = pitches.findIndex((v) => v === pitch)
-
-    const cell = getCellRect({ width, rows, cols, height }, col, row)
-
-    return {
-        left: `${cell.x}px`,
-        top: `${cell.y}px`,
-        width: `${cell.width}px`,
-        height: `${cell.height}px`,
-    }
+function onMouseClick(e: MouseEvent) {
+    addNoteUnderMouse(e)
 }
 </script>
 
 <template>
     <div
         ref="gridContainer"
-        :style="{ width: width + 'px', height: height + 'px' }"
         :class="$style.container"
-        @mousemove="onMouseMove"
-        @mouseleave="onMouseOut"
+        @click="onMouseClick"
     >
-        <div
-            v-for="i in 5"
-            :class="$style['line-container']"
-            :style="{ top: startY + 2 * (i - 1) * rowHeight - 1 + 'px', height: rowHeight + 'px' }"
+        <CellHighlight
+            :cols="cols"
+            :rows="rows"
         >
-            <div :class="$style.line"></div>
-        </div>
-
-        <template v-for="(barNotes, pitch) in notes">
             <div
-                v-for="(_, col) in barNotes"
-                :style="notePositionStyle(pitch, col)"
-                :class="$style['cell']"
-            ></div>
-        </template>
+                v-for="i in 5"
+                :class="$style['line-container']"
+                :style="{
+                    top: startY + 2 * (i - 1) * rowHeight - 1 + 'px',
+                    height: rowHeight + 'px',
+                }"
+            >
+                <div :class="$style.line"></div>
+            </div>
 
-        <div
-            v-show="hoverCell.isShown"
-            :style="{
-                top: `${hoverCell.y}px`,
-                height: `${hoverCell.height}px`,
-            }"
-            :class="$style['hover-cell']"
-        ></div>
-        <div
-            v-show="hoverCell.isShown"
-            :style="{
-                left: `${hoverCell.x}px`,
-                width: `${hoverCell.width}px`,
-            }"
-            :class="$style['hover-cell']"
-        ></div>
+            <template v-for="(barNotes, pitch) in notes">
+                <div
+                    v-for="(_, col) in barNotes"
+                    :style="notePositionStyle(pitch, col)"
+                    :class="$style['cell']"
+                ></div>
+            </template>
+        </CellHighlight>
     </div>
 </template>
 
 <style lang="css" scoped module>
 .container {
+    width: 100%;
+    height: 100%;
+
     position: relative;
     border: 1px solid black;
 
@@ -156,14 +137,6 @@ function notePositionStyle(pitch: Pitch, col: number) {
     width: 100%;
     background: black;
     transform: translateY(50%);
-}
-
-.hover-cell {
-    position: absolute;
-    background-color: mediumseagreen;
-    opacity: 25%;
-    width: 100%;
-    height: 100%;
 }
 
 .cell {
