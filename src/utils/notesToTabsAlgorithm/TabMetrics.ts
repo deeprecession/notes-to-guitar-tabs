@@ -1,5 +1,6 @@
 import _ from "lodash"
-import type { Chord, Tab } from "./NotesToTabsConverter"
+import type { Tab } from "../../entities/Tab"
+import type { Chord } from "../../entities/ChordSequence"
 
 export type TabMetrics = {
     firstFret: number

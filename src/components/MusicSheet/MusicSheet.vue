@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type Pitch } from "../../utils/notesToTabsAlgorithm/Pitch"
+import type { Pitch } from "../../entities/Pitch"
 import Bar from "./Bar.vue"
 import type { MusicSheetNotes } from "./MusicSheetContainer.vue"
 

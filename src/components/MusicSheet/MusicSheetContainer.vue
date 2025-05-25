@@ -8,7 +8,7 @@ import {
     type NoteFraction,
     type NoteFractionKey,
 } from "./noteFractions"
-import type { Pitch } from "../../utils/notesToTabsAlgorithm/Pitch"
+import type { Pitch } from "../../entities/Pitch"
 
 export type BarRowNotes = Record<number, NoteFraction>
 export type BarNotes = {

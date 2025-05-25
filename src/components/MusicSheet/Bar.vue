@@ -2,7 +2,7 @@
 import { onMounted, onUnmounted, ref, useTemplateRef } from "vue"
 import BarRow from "./BarRow.vue"
 import type { BarNotes } from "./MusicSheetContainer.vue"
-import type { Pitch } from "../../utils/notesToTabsAlgorithm/Pitch"
+import type { Pitch } from "../../entities/Pitch"
 
 const barPitches: Pitch[] = [
     "F5",

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from "vue"
-import type { GuitarTuning } from "../../utils/notesToTabsAlgorithm/GuitarTuning"
+import type { GuitarTuning } from "../../entities/GuitarTuning"
 import type { FinedTab } from "../../utils/notesToTabsAlgorithm/TabMetrics"
 
 const props = defineProps<{

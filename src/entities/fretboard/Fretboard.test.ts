@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest"
-import { computeFretboard } from "./GuitarFretboard"
-import { standardTuning } from "./GuitarTuning"
+import { computeFretboard } from "./Fretboard"
+import { standardTuning } from "../GuitarTuning"
 
 describe("GuitarFretboard", () => {
     it("correct bass string on default guitar tuning", () => {

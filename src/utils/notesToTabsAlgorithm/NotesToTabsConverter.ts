@@ -1,6 +1,4 @@
 import _ from "lodash"
-import type { Fretboard } from "./GuitarFretboard"
-import type { Pitch } from "./Pitch"
 import {
     calculateMetricsForTab,
     defaultRankTabsParams,
@@ -8,11 +6,9 @@ import {
     type FinedTab,
     type TabMetrics,
 } from "./TabMetrics"
-
-export type Tab = (number | null)[]
-
-export type Chord = Pitch[]
-export type ChordSequence = Chord[]
+import type { Chord, ChordSequence } from "../../entities/ChordSequence"
+import type { Tab } from "../../entities/Tab"
+import type { Fretboard } from "../../entities/fretboard/Fretboard"
 
 export function getTheBestWayToPlayChordSequence(
     fretboard: Fretboard,

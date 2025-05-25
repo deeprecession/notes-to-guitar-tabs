@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest"
-import { type Chord, type Tab } from "./NotesToTabsConverter"
 import {
     calculateMetricsForTab,
     rankTabs,
@@ -7,6 +6,8 @@ import {
     type TabWithMetrics,
 } from "./TabMetrics"
 import _ from "lodash"
+import type { Tab } from "../../entities/Tab"
+import type { Chord } from "../../entities/ChordSequence"
 
 describe("rank tabs", () => {
     it("should calculate no fine", () => {

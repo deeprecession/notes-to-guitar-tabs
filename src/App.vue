@@ -4,16 +4,14 @@ import MusicSheetContainer, {
     type MusicSheetNotes,
 } from "./components/MusicSheet/MusicSheetContainer.vue"
 import TabComponent from "./components/TabComponent/TabComponent.vue"
-import {
-    getAllWaysToPlayChordSequence,
-    type ChordSequence,
-} from "./utils/notesToTabsAlgorithm/NotesToTabsConverter"
-import { standardTuning } from "./utils/notesToTabsAlgorithm/GuitarTuning"
-import { computeFretboard } from "./utils/notesToTabsAlgorithm/GuitarFretboard"
-import type { Pitch } from "./utils/notesToTabsAlgorithm/Pitch"
+import { getAllWaysToPlayChordSequence } from "./utils/notesToTabsAlgorithm/NotesToTabsConverter"
 import type { FinedTab } from "./utils/notesToTabsAlgorithm/TabMetrics"
 import { useNotesStorage } from "./composables/notesStorage"
 import BarVisuals from "./components/MusicSheet/BarVisuals.vue"
+import type { ChordSequence } from "./entities/ChordSequence"
+import type { Pitch } from "./entities/Pitch"
+import { standardTuning } from "./entities/GuitarTuning"
+import { computeFretboard } from "./entities/fretboard/Fretboard"
 
 const tabs = ref<FinedTab[][]>([])
 const notes = useNotesStorage()

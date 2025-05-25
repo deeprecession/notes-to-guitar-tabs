@@ -2,7 +2,6 @@
 import { ref } from "vue"
 import { getCellAtPoint } from "./gridGeometry"
 import { type BarNotes } from "./MusicSheetContainer.vue"
-import type { Pitch } from "../../utils/notesToTabsAlgorithm/Pitch"
 
 defineProps<{ notes: BarNotes }>()
 

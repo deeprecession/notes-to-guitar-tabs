@@ -1,13 +1,9 @@
 import { describe, expect, it } from "vitest"
-import {
-    findAllTabsForChord,
-    getAllWaysToPlayChordSequence,
-    type Chord,
-    type ChordSequence,
-    type Tab,
-} from "./NotesToTabsConverter"
-import { standardTuning } from "./GuitarTuning"
-import { computeFretboard } from "./GuitarFretboard"
+import { findAllTabsForChord, getAllWaysToPlayChordSequence } from "./NotesToTabsConverter"
+import { standardTuning } from "../../entities/GuitarTuning"
+import type { Tab } from "../../entities/Tab"
+import { computeFretboard } from "../../entities/fretboard/Fretboard"
+import type { Chord, ChordSequence } from "../../entities/ChordSequence"
 
 describe("get all ways to play chord with previous tab position", () => {
     it("should sort to the knowing that previous positon was at 12ve fret", () => {

@@ -1,5 +1,5 @@
-import type { GuitarTuning } from "./GuitarTuning"
-import { fromPitchIndex, getPitchIndex, type Pitch } from "./Pitch"
+import type { GuitarTuning } from "../GuitarTuning"
+import { fromPitchIndex, getPitchIndex, type Pitch } from "../Pitch"
 
 export type GuitarString = Pitch[]
 export type Fretboard = GuitarString[]
