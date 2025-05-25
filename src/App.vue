@@ -13,6 +13,7 @@ import { computeFretboard } from "./utils/notesToTabsAlgorithm/GuitarFretboard"
 import type { Pitch } from "./utils/notesToTabsAlgorithm/Pitch"
 import type { FinedTab } from "./utils/notesToTabsAlgorithm/TabMetrics"
 import { useNotesStorage } from "./composables/notesStorage"
+import BarVisuals from "./components/MusicSheet/BarVisuals.vue"
 
 const tabs = ref<FinedTab[][]>([])
 const notes = useNotesStorage()
@@ -47,6 +48,7 @@ function convertToTabs() {
 </script>
 
 <template>
+    <BarVisuals :notes="notes[0]" />
     <h1>Music sheet</h1>
     <MusicSheetContainer
         :note-cols="BAR_COLS"
