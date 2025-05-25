@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Pitch } from "../../entities/Pitch"
-import BarVisuals from "./BarVisuals.vue"
+import Bar from "./Bar/Bar.vue"
 import type { MusicSheetNotes } from "./MusicSheetContainer.vue"
 
 defineProps<{ noteColumns: number; notes: MusicSheetNotes }>()
@@ -24,7 +24,7 @@ defineEmits<{
         <!--     @remove-note="(pitch, col) => $emit('remove-note', { barInx, pitch, col })" -->
         <!-- /> -->
 
-        <BarVisuals
+        <Bar
             v-for="barNotes in notes"
             :notes="barNotes"
             :class="$style.bar"

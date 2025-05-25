@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed, ref } from "vue"
 import { getCellAtPoint } from "./gridGeometry"
-import { type BarNotes } from "./MusicSheetContainer.vue"
-import type { Pitch } from "../../entities/Pitch"
-import { useSizeObserver } from "../../composables/sizeObserver"
+import { type BarNotes } from "../MusicSheetContainer.vue"
+import type { Pitch } from "../../../entities/Pitch"
+import { useSizeObserver } from "../../../composables/sizeObserver"
 import BarLines from "./BarLines.vue"
 import CellHighlight from "./CellHighlight.vue"
 

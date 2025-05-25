@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue"
 import { getCellAtPoint } from "./gridGeometry"
-import { useSizeObserver } from "../../composables/sizeObserver"
+import { useSizeObserver } from "../../../composables/sizeObserver"
 
 const props = defineProps<{ cols: number; rows: number }>()
 
