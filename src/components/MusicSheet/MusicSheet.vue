@@ -25,9 +25,10 @@ defineEmits<{
         <!-- /> -->
 
         <Bar
-            v-for="barNotes in notes"
+            v-for="(barNotes, barInx) in notes"
             :notes="barNotes"
             :class="$style.bar"
+            @add-note="(pitch, col) => $emit('add-note', { barInx, pitch, col })"
         />
     </div>
 </template>
