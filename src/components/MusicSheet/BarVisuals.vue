@@ -4,6 +4,7 @@ import { getCellAtPoint } from "./gridGeometry"
 import { type BarNotes } from "./MusicSheetContainer.vue"
 import type { Pitch } from "../../entities/Pitch"
 import { useSizeObserver } from "../../composables/sizeObserver"
+import BarLines from "./BarLines.vue"
 import CellHighlight from "./CellHighlight.vue"
 
 defineProps<{ notes: BarNotes }>()
@@ -47,7 +48,6 @@ const { scrollWidth: containerWidth, scrollHeight: containerHeight } =
 const rows = pitches.length
 const rowsAboveStaff = (rows - 9) / 2
 const rowHeight = computed(() => containerHeight.value / rows)
-const startY = computed(() => rowsAboveStaff * rowHeight.value)
 
 function notePositionStyle(pitch: Pitch, col: number) {
     const row = pitches.indexOf(pitch)
@@ -87,29 +87,23 @@ function onMouseClick(e: MouseEvent) {
         :class="$style.container"
         @click="onMouseClick"
     >
-        <CellHighlight
-            :cols="cols"
-            :rows="rows"
+        <BarLines
+            :row-height="rowHeight"
+            :rows-above-staff="rowsAboveStaff"
         >
-            <div
-                v-for="i in 5"
-                :class="$style['line-container']"
-                :style="{
-                    top: startY + 2 * (i - 1) * rowHeight - 1 + 'px',
-                    height: rowHeight + 'px',
-                }"
+            <CellHighlight
+                :cols="cols"
+                :rows="rows"
             >
-                <div :class="$style.line"></div>
-            </div>
-
-            <template v-for="(barNotes, pitch) in notes">
-                <div
-                    v-for="(_, col) in barNotes"
-                    :style="notePositionStyle(pitch, col)"
-                    :class="$style['cell']"
-                ></div>
-            </template>
-        </CellHighlight>
+                <template v-for="(barNotes, pitch) in notes">
+                    <div
+                        v-for="(_, col) in barNotes"
+                        :style="notePositionStyle(pitch, col)"
+                        :class="$style['cell']"
+                    ></div>
+                </template>
+            </CellHighlight>
+        </BarLines>
     </div>
 </template>
 
@@ -122,21 +116,6 @@ function onMouseClick(e: MouseEvent) {
     border: 1px solid black;
 
     overflow: hidden;
-}
-
-.line-container {
-    position: absolute;
-    width: 100%;
-    display: flex;
-    align-items: center;
-}
-
-.line {
-    position: absolute;
-    height: 3px;
-    width: 100%;
-    background: black;
-    transform: translateY(50%);
 }
 
 .cell {
