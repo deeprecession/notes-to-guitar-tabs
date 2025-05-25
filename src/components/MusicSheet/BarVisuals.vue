@@ -1,23 +1,41 @@
 <script setup lang="ts">
 import { ref } from "vue"
-import { getCellAtPoint } from "./gridGeometry"
+import { getCellAtPoint, getCellRect } from "./gridGeometry"
 import { type BarNotes } from "./MusicSheetContainer.vue"
+import type { Pitch } from "../../entities/Pitch"
 
 defineProps<{ notes: BarNotes }>()
 
-// type Clef = {
-//
-// }
-//
-// type StaffConfig = {
-//     clef: Clef
-// }
+const pitches: Pitch[] = [
+    "E5",
+    "D5",
+    "C5",
+    "B4",
+    "A4",
+    "G4",
+    "F4",
+    "E4",
+    "D4",
+    "C4",
+    "B3",
+    "A3",
+    "G3",
+    "F3",
+    "E3",
+    "D3",
+    "C3",
+    "B2",
+    "A2",
+    "G2",
+    "F2",
+    "E2",
+]
 
 const cols = 16
 
 const width = 480
 const height = 210
-const rows = 21
+const rows = 22
 const rowsAboveStaff = (rows - 9) / 2
 const rowHeight = height / rows
 const startY = rowsAboveStaff * rowHeight
@@ -35,27 +53,43 @@ function onMouseMove(e: MouseEvent) {
 }
 
 type HoverCell = {
+    isShown: boolean
     x: number
     y: number
     width: number
     height: number
 }
 
-const hoverCell = ref<HoverCell>({ x: 0, y: 0, width: 0, height: 0 })
+const hoverCell = ref<HoverCell>({ isShown: false, x: 0, y: 0, width: 0, height: 0 })
 
 function updateHoverCell(x: number, y: number) {
-    const cell = getCellAtPoint({ cols, rows, width, height }, x, y)
+    const cell: HoverCell = {
+        ...getCellAtPoint({ cols, rows, width, height }, x, y),
+        isShown: true,
+    }
     hoverCell.value = cell
 }
 
-// function notePositionStyle(pitch: Pitch, col: number) {
-//     return {
-//         left: `${hoverCell.x}px`,
-//         top: `${hoverCell.y}px`,
-//         width: `${hoverCell.width}px`,
-//         height: `${hoverCell.height}px`,
-//     }
-// }
+function hideHoverCell() {
+    hoverCell.value.isShown = false
+}
+
+function onMouseOut() {
+    hideHoverCell()
+}
+
+function notePositionStyle(pitch: Pitch, col: number) {
+    const row = pitches.findIndex((v) => v === pitch)
+
+    const cell = getCellRect({ width, rows, cols, height }, col, row)
+
+    return {
+        left: `${cell.x}px`,
+        top: `${cell.y}px`,
+        width: `${cell.width}px`,
+        height: `${cell.height}px`,
+    }
+}
 </script>
 
 <template>
@@ -64,6 +98,7 @@ function updateHoverCell(x: number, y: number) {
         :style="{ width: width + 'px', height: height + 'px' }"
         :class="$style.container"
         @mousemove="onMouseMove"
+        @mouseleave="onMouseOut"
     >
         <div
             v-for="i in 5"
@@ -73,15 +108,16 @@ function updateHoverCell(x: number, y: number) {
             <div :class="$style.line"></div>
         </div>
 
-        <!-- <template v-for="barNotes in notes"> -->
-        <!--     <div -->
-        <!--         v-for="pitchNotes in barNotes" -->
-        <!--         :style="notePositionStyle()" -->
-        <!--         :class="$style['cell']" -->
-        <!--     ></div> -->
-        <!-- </template> -->
+        <template v-for="(barNotes, pitch) in notes">
+            <div
+                v-for="(_, col) in barNotes"
+                :style="notePositionStyle(pitch, col)"
+                :class="$style['cell']"
+            ></div>
+        </template>
 
         <div
+            v-show="hoverCell.isShown"
             :style="{
                 top: `${hoverCell.y}px`,
                 height: `${hoverCell.height}px`,
@@ -89,6 +125,7 @@ function updateHoverCell(x: number, y: number) {
             :class="$style['hover-cell']"
         ></div>
         <div
+            v-show="hoverCell.isShown"
             :style="{
                 left: `${hoverCell.x}px`,
                 width: `${hoverCell.width}px`,
