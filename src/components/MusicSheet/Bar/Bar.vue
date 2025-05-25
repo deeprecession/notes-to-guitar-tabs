@@ -5,7 +5,7 @@ import { type BarNotes } from "../MusicSheetContainer.vue"
 import type { Pitch } from "../../../entities/Pitch"
 import { useSizeObserver } from "../../../composables/sizeObserver"
 import BarLines from "./BarLines.vue"
-import CellHighlight from "./CellHighlight.vue"
+import HighlightOverlay from "./HighlightOverlay.vue"
 
 defineProps<{ notes: BarNotes }>()
 
@@ -79,6 +79,41 @@ function addNoteUnderMouse(e: MouseEvent) {
 function onMouseClick(e: MouseEvent) {
     addNoteUnderMouse(e)
 }
+
+function onMouseMove(e: MouseEvent) {
+    if (!gridContainer.value) return
+
+    const bounds = gridContainer.value.getBoundingClientRect()
+    const x = e.clientX - bounds.left
+    const y = e.clientY - bounds.top
+
+    updateHoverCell(x, y)
+}
+
+const hoverCell = ref({ x: 0, y: 0, width: 0, height: 0 })
+const isMouseOut = ref(true)
+
+function updateHoverCell(x: number, y: number) {
+    const cell = {
+        ...getCellAtPoint(
+            {
+                cols: cols,
+                rows: rows,
+                width: containerWidth.value,
+                height: containerHeight.value,
+            },
+            x,
+            y
+        ),
+    }
+    hoverCell.value = cell
+
+    isMouseOut.value = false
+}
+
+function onMouseOut() {
+    isMouseOut.value = true
+}
 </script>
 
 <template>
@@ -86,24 +121,24 @@ function onMouseClick(e: MouseEvent) {
         ref="gridContainer"
         :class="$style.container"
         @click="onMouseClick"
+        @mousemove="onMouseMove"
+        @mouseleave="onMouseOut"
     >
         <BarLines
             :row-height="rowHeight"
             :rows-above-staff="rowsAboveStaff"
-        >
-            <CellHighlight
-                :cols="cols"
-                :rows="rows"
-            >
-                <template v-for="(barNotes, pitch) in notes">
-                    <div
-                        v-for="(_, col) in barNotes"
-                        :style="notePositionStyle(pitch, col)"
-                        :class="$style['cell']"
-                    ></div>
-                </template>
-            </CellHighlight>
-        </BarLines>
+        />
+        <HighlightOverlay
+            v-show="!isMouseOut"
+            :area="hoverCell"
+        />
+        <template v-for="(barNotes, pitch) in notes">
+            <div
+                v-for="(_, col) in barNotes"
+                :style="notePositionStyle(pitch, col)"
+                :class="$style['cell']"
+            ></div>
+        </template>
     </div>
 </template>
 

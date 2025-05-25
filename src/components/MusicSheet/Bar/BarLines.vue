@@ -10,31 +10,22 @@ const staffLinesTopCoord = computed(() => props.rowsAboveStaff * props.rowHeight
 </script>
 
 <template>
-    <div :class="$style.container">
-        <div
-            v-for="i in 5"
-            :key="i"
-            :class="$style['line-container']"
-            :style="{
-                top: `${staffLinesTopCoord + 2 * (i - 1) * rowHeight - 1}px`,
-                height: `${rowHeight}px`,
-            }"
-        >
-            <div :class="$style.line"></div>
-        </div>
-
-        <slot></slot>
+    <div
+        v-for="i in 5"
+        :key="i"
+        :class="$style['line-container']"
+        :style="{
+            top: `${staffLinesTopCoord + 2 * (i - 1) * rowHeight - 1}px`,
+            height: `${rowHeight}px`,
+        }"
+    >
+        <div :class="$style.line"></div>
     </div>
+
+    <slot></slot>
 </template>
 
 <style lang="css" scoped module>
-.container {
-    width: 100%;
-    height: 100%;
-
-    position: relative;
-}
-
 .line-container {
     position: absolute;
     width: 100%;
