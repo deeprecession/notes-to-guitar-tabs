@@ -6,6 +6,7 @@ import type { Pitch } from "../../../entities/Pitch"
 import { useSizeObserver } from "../../../composables/sizeObserver"
 import BarLines from "./BarLines.vue"
 import HighlightOverlay from "./HighlightOverlay.vue"
+import Notes from "./Notes.vue"
 
 defineProps<{ notes: BarNotes }>()
 
@@ -48,16 +49,6 @@ const { scrollWidth: containerWidth, scrollHeight: containerHeight } =
 const rows = pitches.length
 const rowsAboveStaff = (rows - 9) / 2
 const rowHeight = computed(() => containerHeight.value / rows)
-
-function notePositionStyle(pitch: Pitch, col: number) {
-    const row = pitches.indexOf(pitch)
-    return {
-        left: `${(col / cols) * 100}%`,
-        top: `${(row / rows) * 100}%`,
-        width: `${100 / cols}%`,
-        height: `${100 / rows}%`,
-    }
-}
 
 function addNoteUnderMouse(e: MouseEvent) {
     if (!gridContainer.value) return
@@ -132,13 +123,12 @@ function onMouseOut() {
             v-show="!isMouseOut"
             :area="hoverCell"
         />
-        <template v-for="(barNotes, pitch) in notes">
-            <div
-                v-for="(_, col) in barNotes"
-                :style="notePositionStyle(pitch, col)"
-                :class="$style['cell']"
-            ></div>
-        </template>
+        <Notes
+            :notes="notes"
+            :pitches="pitches"
+            :rows="rows"
+            :cols="cols"
+        />
     </div>
 </template>
 
@@ -151,10 +141,5 @@ function onMouseOut() {
     border: 1px solid black;
 
     overflow: hidden;
-}
-
-.cell {
-    position: absolute;
-    background-color: black;
 }
 </style>
