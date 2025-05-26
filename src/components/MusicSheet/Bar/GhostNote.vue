@@ -41,6 +41,7 @@ function notePositionStyle() {
     width: 100%;
     height: 100%;
     opacity: 50%;
+    pointer-events: none;
 }
 .note {
     position: absolute;
