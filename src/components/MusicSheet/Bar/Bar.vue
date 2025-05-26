@@ -8,6 +8,7 @@ import BarLines from "./BarLines.vue"
 import HighlightOverlay from "./HighlightOverlay.vue"
 import Notes from "./Notes.vue"
 import LedgerLines from "./LedgerLines.vue"
+import GhostNote from "./GhostNote.vue"
 
 defineProps<{ notes: BarNotes }>()
 
@@ -139,6 +140,13 @@ function onMouseLeave() {
             :rows-above-staff="rowsAboveStaff"
             :hoveredCell="hoverCell"
             :is-hovered-cell-shown="!isMouseOut"
+        />
+        <GhostNote
+            v-show="!isMouseOut"
+            :rows="rows"
+            :cols="cols"
+            :row="hoverCell.row"
+            :col="hoverCell.col"
         />
     </div>
 </template>
