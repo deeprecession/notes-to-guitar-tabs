@@ -22,7 +22,7 @@ watch(
     <div :class="$style.container">
         <div :class="$style.col">
             Tuning
-            <div v-for="pitch in guitarTuning">
+            <div v-for="pitch in [...guitarTuning].reverse()">
                 {{ pitch }}
             </div>
         </div>
