@@ -32,8 +32,8 @@ export function getCellAtPoint(grid: Grid, x: number, y: number): Cell {
     const colWidth = grid.width / grid.cols
     const rowHeight = grid.height / grid.rows
 
-    const col = Math.floor(x / colWidth)
-    const row = Math.floor(y / rowHeight)
+    const col = Math.max(0, Math.min(grid.cols - 1, Math.floor(x / colWidth)))
+    const row = Math.max(0, Math.min(grid.rows - 1, Math.floor(y / rowHeight)))
 
     return {
         x: col * colWidth,
