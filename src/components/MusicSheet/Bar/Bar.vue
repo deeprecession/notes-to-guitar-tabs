@@ -7,6 +7,7 @@ import { useSizeObserver } from "../../../composables/sizeObserver"
 import BarLines from "./BarLines.vue"
 import HighlightOverlay from "./HighlightOverlay.vue"
 import Notes from "./Notes.vue"
+import LedgerLines from "./LedgerLines.vue"
 
 defineProps<{ notes: BarNotes }>()
 
@@ -47,7 +48,7 @@ const { offsetWidth: containerWidth, offsetHeight: containerHeight } =
     useSizeObserver(gridContainer)
 
 const rows = pitches.length
-const rowsAboveStaff = (rows - 9) / 2
+const rowsAboveStaff = 6
 const rowHeight = computed(() => containerHeight.value / rows)
 
 function addNoteUnderMouse(e: MouseEvent) {
@@ -128,6 +129,14 @@ function onMouseLeave() {
             :pitches="pitches"
             :rows="rows"
             :cols="cols"
+        />
+        <LedgerLines
+            :notes="notes"
+            :pitches="pitches"
+            :rows="rows"
+            :cols="cols"
+            :row-height="rowHeight"
+            :rows-above-staff="rowsAboveStaff"
         />
     </div>
 </template>

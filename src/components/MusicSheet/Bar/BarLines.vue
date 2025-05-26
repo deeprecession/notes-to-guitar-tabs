@@ -37,16 +37,17 @@ const staffLinesTopCoord = computed(() => props.rowsAboveStaff * props.rowHeight
 .line-container {
     position: absolute;
     width: 100%;
-    display: flex;
-    align-items: center;
 }
 
 .line {
     position: absolute;
 
+    top: 50%;
+
     height: 3px;
     width: 100%;
 
     background: black;
+    transform: translateY(-50%);
 }
 </style>
