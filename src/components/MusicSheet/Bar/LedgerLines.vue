@@ -11,6 +11,8 @@ const props = defineProps<{
     pitches: Pitch[]
     rows: number
     cols: number
+    hoveredCell: { col: number; row: number }
+    isHoveredCellShown: boolean
 }>()
 
 const firstRowBelowStaffInx = computed(() => props.rowsAboveStaff + 8)
@@ -27,6 +29,10 @@ const highestAndLowestNotesBelowAndAboveStaff = computed(() => {
             row,
         }))
     })
+
+    if (props.isHoveredCellShown) {
+        notePositions.push(props.hoveredCell)
+    }
 
     const notesByColumn = _.groupBy(notePositions, "col")
 

@@ -82,7 +82,7 @@ function onMouseMove(e: MouseEvent) {
     updateHoverCell(x, y)
 }
 
-const hoverCell = ref({ x: 0, y: 0, width: 0, height: 0 })
+const hoverCell = ref({ x: 0, y: 0, width: 0, height: 0, col: 0, row: 0 })
 const isMouseOut = ref(true)
 
 function updateHoverCell(x: number, y: number) {
@@ -137,6 +137,8 @@ function onMouseLeave() {
             :cols="cols"
             :row-height="rowHeight"
             :rows-above-staff="rowsAboveStaff"
+            :hoveredCell="hoverCell"
+            :is-hovered-cell-shown="!isMouseOut"
         />
     </div>
 </template>
