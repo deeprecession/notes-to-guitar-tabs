@@ -20,7 +20,7 @@ const emit = defineEmits<{
 }>()
 
 const lineElem = useTemplateRef("lineElem")
-const { scrollWidth } = useSizeObserver(lineElem)
+const { offsetWidth: width } = useSizeObserver(lineElem)
 
 function onClick(e: MouseEvent) {
     const clickedColumn = getColumnUnderMouseCursor(e)
@@ -55,8 +55,8 @@ function getColumnUnderMouseCursor(e: MouseEvent) {
 }
 
 function getNoteXShift(col: number) {
-    const halfColumnShift = (scrollWidth.value / props.columnsNum) * 0.5
-    const nColumnsShift = (scrollWidth.value * col) / props.columnsNum
+    const halfColumnShift = (width.value / props.columnsNum) * 0.5
+    const nColumnsShift = (width.value * col) / props.columnsNum
     return halfColumnShift + nColumnsShift
 }
 

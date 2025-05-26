@@ -10,10 +10,7 @@ defineProps<{
 </script>
 
 <template>
-    <div
-        ref="gridContainer"
-        :class="$style.container"
-    >
+    <div>
         <div
             :style="{
                 top: `${area.y}px`,
@@ -28,19 +25,10 @@ defineProps<{
             }"
             :class="$style['highlighted-cell']"
         ></div>
-
-        <slot></slot>
     </div>
 </template>
 
 <style lang="css" scoped module>
-.container {
-    width: 100%;
-    height: 100%;
-
-    position: relative;
-}
-
 .highlighted-cell {
     position: absolute;
     background-color: mediumseagreen;

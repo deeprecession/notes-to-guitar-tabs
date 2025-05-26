@@ -1,16 +1,16 @@
 import { onMounted, onUnmounted, ref, type ShallowRef } from "vue"
 
 export function useSizeObserver(elem: ShallowRef<HTMLElement | null>) {
-    const scrollWidth = ref(0)
-    const scrollHeight = ref(0)
+    const offsetWidth = ref(0)
+    const offsetHeight = ref(0)
 
     const observer = new ResizeObserver(() => {
         if (!elem.value) {
             return
         }
 
-        scrollWidth.value = elem.value.scrollWidth
-        scrollHeight.value = elem.value.scrollHeight
+        offsetWidth.value = elem.value.offsetWidth
+        offsetHeight.value = elem.value.offsetHeight
     })
 
     onMounted(() => {
@@ -24,5 +24,5 @@ export function useSizeObserver(elem: ShallowRef<HTMLElement | null>) {
         observer.disconnect()
     })
 
-    return { scrollWidth, scrollHeight }
+    return { offsetWidth, offsetHeight }
 }

@@ -43,7 +43,7 @@ const cols = 16
 
 const gridContainer = ref<HTMLElement | null>(null)
 
-const { scrollWidth: containerWidth, scrollHeight: containerHeight } =
+const { offsetWidth: containerWidth, offsetHeight: containerHeight } =
     useSizeObserver(gridContainer)
 
 const rows = pitches.length
@@ -139,7 +139,5 @@ function onMouseOut() {
 
     position: relative;
     border: 1px solid black;
-
-    overflow: hidden;
 }
 </style>

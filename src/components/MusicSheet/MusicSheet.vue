@@ -58,9 +58,10 @@ defineEmits<{
         background: #45a049;
     }
 }
+
 .bar {
     flex: 1;
-    min-width: 300px;
-    min-height: 180px;
+    min-width: 320px;
+    min-height: 220px;
 }
 </style>
