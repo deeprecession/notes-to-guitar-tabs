@@ -102,7 +102,7 @@ function updateHoverCell(x: number, y: number) {
     isMouseOut.value = false
 }
 
-function onMouseOut() {
+function onMouseLeave() {
     isMouseOut.value = true
 }
 </script>
@@ -113,7 +113,7 @@ function onMouseOut() {
         :class="$style.container"
         @click="onMouseClick"
         @mousemove="onMouseMove"
-        @mouseleave="onMouseOut"
+        @mouseleave="onMouseLeave"
     >
         <BarLines
             :row-height="rowHeight"
