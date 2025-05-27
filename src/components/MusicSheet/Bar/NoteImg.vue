@@ -6,7 +6,7 @@ defineProps<{ noteFraction: NoteFraction }>()
 
 <template>
     <img
-        :src="`/src/assets/${noteFraction.iconName}.svg`"
+        :src="noteFraction.iconPath"
         :alt="noteFraction.name"
         :class="$style.noteImage"
     />
