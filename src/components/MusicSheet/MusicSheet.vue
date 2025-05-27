@@ -1,13 +1,41 @@
 <script setup lang="ts">
 import type { Pitch } from "../../entities/Pitch"
 import Bar from "./Bar/Bar.vue"
-import type { MusicSheetNotes } from "./MusicSheetContainer.vue"
+import type { BarNotes, MusicSheetNotes } from "./MusicSheetContainer.vue"
+import type { FinedTab } from "../../utils/notesToTabsAlgorithm/TabMetrics"
+import type { ChordSequence } from "../../entities/ChordSequence"
+import { standardTuning } from "../../entities/GuitarTuning"
+import { computeFretboard } from "../../entities/fretboard/Fretboard"
+import { getAllWaysToPlayChordSequence } from "../../utils/notesToTabsAlgorithm/NotesToTabsConverter"
+import Tab from "./Tab/Tab.vue"
 
-defineProps<{ noteColumns: number; notes: MusicSheetNotes }>()
+const props = defineProps<{ noteColumns: number; notes: MusicSheetNotes }>()
 defineEmits<{
     (e: "add-note", payload: { barInx: number; pitch: Pitch; col: number }): void
     (e: "remove-note", payload: { barInx: number; pitch: Pitch; col: number }): void
 }>()
+
+function musicSheetToTab(bar: BarNotes): ChordSequence {
+    const chordSequence: ChordSequence = Array.from({ length: props.noteColumns }, () => [])
+
+    Object.entries(bar).forEach(([rowInx, row]) => {
+        Object.entries(row).forEach(([col]) => {
+            const colInx = Number(col)
+
+            const chordInx = colInx
+            chordSequence[chordInx].push(rowInx as Pitch)
+        })
+    })
+
+    return chordSequence
+}
+
+function convertToTabs(notes: BarNotes): FinedTab[][] {
+    const sequence = musicSheetToTab(notes)
+    const fretboard = computeFretboard(standardTuning)
+
+    return getAllWaysToPlayChordSequence(fretboard, sequence)
+}
 </script>
 
 <template>
@@ -15,13 +43,22 @@ defineEmits<{
         ref="sheet"
         :class="[$style.container, $style.paperSheet]"
     >
-        <Bar
+        <div
             v-for="(barNotes, barInx) in notes"
-            :notes="barNotes"
-            :class="$style.bar"
-            @add-note="({ pitch, col }) => $emit('add-note', { barInx, pitch, col })"
-            @remove-note="({ pitch, col }) => $emit('remove-note', { barInx, pitch, col })"
-        />
+            :class="$style['bar-tab-col']"
+        >
+            <Bar
+                :notes="barNotes"
+                :class="$style.bar"
+                @add-note="({ pitch, col }) => $emit('add-note', { barInx, pitch, col })"
+                @remove-note="({ pitch, col }) => $emit('remove-note', { barInx, pitch, col })"
+            />
+            <Tab
+                :tabs="convertToTabs(barNotes)"
+                :guitar-tuning="standardTuning"
+                :class="$style.tab"
+            />
+        </div>
     </div>
 </template>
 
@@ -63,8 +100,15 @@ defineEmits<{
     }
 }
 
-.bar {
+.bar-tab-col {
+    display: flex;
+    flex-flow: column nowrap;
     flex: 1;
+
+    gap: 2rem;
+}
+
+.bar {
     min-width: 320px;
     min-height: 220px;
 }

@@ -1,62 +1,18 @@
 <script setup lang="ts">
-import { ref } from "vue"
-import MusicSheetContainer, {
-    type MusicSheetNotes,
-} from "./components/MusicSheet/MusicSheetContainer.vue"
-import Tab from "./components/Tab/Tab.vue"
-import { getAllWaysToPlayChordSequence } from "./utils/notesToTabsAlgorithm/NotesToTabsConverter"
-import type { FinedTab } from "./utils/notesToTabsAlgorithm/TabMetrics"
+import MusicSheetContainer from "./components/MusicSheet/MusicSheetContainer.vue"
 import { useNotesStorage } from "./composables/notesStorage"
-import type { ChordSequence } from "./entities/ChordSequence"
-import type { Pitch } from "./entities/Pitch"
-import { standardTuning } from "./entities/GuitarTuning"
-import { computeFretboard } from "./entities/fretboard/Fretboard"
 
-const tabs = ref<FinedTab[][]>([])
+
 const notes = useNotesStorage()
 
 const BAR_COLS = 16
-
-function musicSheetToTab(sheet: MusicSheetNotes): ChordSequence {
-    const chordSequence: ChordSequence = Array.from({ length: sheet.length * BAR_COLS }, () => [])
-
-    for (let barInx = 0; barInx < sheet.length; barInx++) {
-        const bar = sheet[barInx]
-
-        Object.entries(bar).forEach(([rowInx, row]) => {
-            Object.entries(row).forEach(([col]) => {
-                const colInx = Number(col)
-
-                const chordInx = colInx + barInx * BAR_COLS
-                chordSequence[chordInx].push(rowInx as Pitch)
-            })
-        })
-    }
-
-    return chordSequence
-}
-
-function convertToTabs() {
-    const sequence = musicSheetToTab(notes.value)
-    const fretboard = computeFretboard(standardTuning)
-
-    tabs.value = getAllWaysToPlayChordSequence(fretboard, sequence)
-}
 </script>
 
 <template>
     <div :class="$style.layout">
-        <h1>Music sheet</h1>
         <MusicSheetContainer
             :note-cols="BAR_COLS"
             :model-value="notes"
-        />
-
-        <h1>Tabs</h1>
-        <button @click="convertToTabs">convert to tabs</button>
-        <Tab
-            :tabs="tabs"
-            :guitar-tuning="standardTuning"
         />
     </div>
 </template>
