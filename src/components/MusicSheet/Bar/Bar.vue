@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from "vue"
+import { computed, inject, ref, type Ref } from "vue"
 import { getCellAtPoint } from "./gridGeometry"
 import { type BarNotes } from "../MusicSheetContainer.vue"
 import type { Pitch } from "../../../entities/Pitch"
@@ -9,12 +9,15 @@ import HighlightOverlay from "./HighlightOverlay.vue"
 import Notes from "./Notes.vue"
 import LedgerLines from "./LedgerLines.vue"
 import GhostNote from "./GhostNote.vue"
+import type { InteractionMode } from "../MusicSheetControls.vue"
 
 defineProps<{ notes: BarNotes }>()
 
 const emit = defineEmits<{
     (e: "add-note", pitch: Pitch, col: number): void
 }>()
+
+const mode = inject<Ref<InteractionMode>>("interaction-mode", ref("insert"))
 
 const pitches: Pitch[] = [
     "E5",
@@ -122,7 +125,7 @@ function onMouseLeave() {
             :rows-above-staff="rowsAboveStaff"
         />
         <HighlightOverlay
-            v-show="!isMouseOut"
+            v-show="!isMouseOut && mode === 'insert'"
             :area="hoverCell"
         />
         <Notes
@@ -139,10 +142,10 @@ function onMouseLeave() {
             :row-height="rowHeight"
             :rows-above-staff="rowsAboveStaff"
             :hoveredCell="hoverCell"
-            :is-hovered-cell-shown="!isMouseOut"
+            :is-hovered-cell-shown="!isMouseOut && mode === 'insert'"
         />
         <GhostNote
-            v-show="!isMouseOut"
+            v-show="!isMouseOut && mode === 'insert'"
             :rows="rows"
             :cols="cols"
             :row="hoverCell.row"
