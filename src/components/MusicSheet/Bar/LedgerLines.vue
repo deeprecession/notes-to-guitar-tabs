@@ -67,7 +67,7 @@ const ledgerLinesPositions = computed(() => {
             }
 
             if (lowestBelowStaff !== undefined) {
-                for (let i = firstRowBelowStaffInx.value + 1; i <= lowestBelowStaff; i += 2) {
+                for (let i = firstRowBelowStaffInx.value + 2; i <= lowestBelowStaff; i += 2) {
                     positions.push({ row: i, col: parseInt(colStr) })
                 }
             }
