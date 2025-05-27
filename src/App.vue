@@ -2,7 +2,6 @@
 import MusicSheetContainer from "./components/MusicSheet/MusicSheetContainer.vue"
 import { useNotesStorage } from "./composables/notesStorage"
 
-
 const notes = useNotesStorage()
 
 const BAR_COLS = 16

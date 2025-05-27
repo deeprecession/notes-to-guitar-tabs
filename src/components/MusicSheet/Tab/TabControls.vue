@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { ref, watch } from "vue"
+import { watch, defineModel } from "vue"
 import type { FinedTab } from "../../../utils/notesToTabsAlgorithm/TabMetrics"
 
 const props = defineProps<{
     tabs: FinedTab[][]
 }>()
 
-const curTabInx = ref(new Array(props.tabs.length).fill(0))
+const curTabInx = defineModel<number[]>("selected-solutions", {
+    default: [],
+})
 
 watch(
     () => props.tabs,
@@ -18,21 +20,22 @@ watch(
 
 <template>
     <div :class="$style.container">
-        <div
-            v-for="(tab, tabInx) in tabs"
-            :class="$style.col"
-        >
+        <div :class="$style.row">
             <button
+                v-for="(tab, tabInx) in tabs"
                 :disabled="!tab[curTabInx[tabInx]] || !tab[curTabInx[tabInx] - 1]"
                 :class="$style.btn"
                 @click="curTabInx[tabInx]--"
             >
                 ⬆️
             </button>
-            <div v-for="num in [...tab[curTabInx[tabInx]]].reverse()">
-                {{ num === null ? "-" : num }}--
-            </div>
+        </div>
+
+        <slot />
+
+        <div :class="$style.row">
             <button
+                v-for="(tab, tabInx) in tabs"
                 :disabled="!tab[curTabInx[tabInx]] || !tab[curTabInx[tabInx] + 1]"
                 :class="$style.btn"
                 @click="curTabInx[tabInx]++"
@@ -49,18 +52,13 @@ watch(
     height: 100%;
 
     display: flex;
-    flex-flow: row nowrap;
-    row-gap: 10rem;
-
-    justify-content: space-around;
-
-    border-left: 1px solid black;
-    border-right: 1px solid black;
+    flex-flow: column nowrap;
 }
 
-.col {
+.row {
     display: flex;
-    flex-flow: column nowrap;
+    flex-flow: row nowrap;
+    justify-content: space-around;
 }
 
 .btn {

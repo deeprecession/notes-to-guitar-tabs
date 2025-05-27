@@ -7,7 +7,7 @@ import type { ChordSequence } from "../../entities/ChordSequence"
 import { standardTuning } from "../../entities/GuitarTuning"
 import { computeFretboard } from "../../entities/fretboard/Fretboard"
 import { getAllWaysToPlayChordSequence } from "../../utils/notesToTabsAlgorithm/NotesToTabsConverter"
-import Tab from "./Tab/Tab.vue"
+import TabContainer from "./Tab/TabContainer.vue"
 
 const props = defineProps<{ noteColumns: number; notes: MusicSheetNotes }>()
 defineEmits<{
@@ -53,7 +53,7 @@ function convertToTabs(notes: BarNotes): FinedTab[][] {
                 @add-note="({ pitch, col }) => $emit('add-note', { barInx, pitch, col })"
                 @remove-note="({ pitch, col }) => $emit('remove-note', { barInx, pitch, col })"
             />
-            <Tab
+            <TabContainer
                 :tabs="convertToTabs(barNotes)"
                 :guitar-tuning="standardTuning"
                 :class="$style.tab"
@@ -109,6 +109,11 @@ function convertToTabs(notes: BarNotes): FinedTab[][] {
 }
 
 .bar {
+    min-width: 320px;
+    min-height: 220px;
+}
+
+.tab {
     min-width: 320px;
     min-height: 220px;
 }
