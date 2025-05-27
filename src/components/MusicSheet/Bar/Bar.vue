@@ -10,11 +10,13 @@ import Notes from "./Notes.vue"
 import LedgerLines from "./LedgerLines.vue"
 import GhostNote from "./GhostNote.vue"
 import type { InteractionMode } from "../MusicSheetControls.vue"
+import NoteDeletionOverlay from "./NoteDeletionOverlay.vue"
 
 defineProps<{ notes: BarNotes }>()
 
 const emit = defineEmits<{
-    (e: "add-note", pitch: Pitch, col: number): void
+    (e: "add-note", payload: { pitch: Pitch; col: number }): void
+    (e: "remove-note", payload: { pitch: Pitch; col: number }): void
 }>()
 
 const mode = inject<Ref<InteractionMode>>("interaction-mode", ref("insert"))
@@ -69,11 +71,13 @@ function addNoteUnderMouse(e: MouseEvent) {
     )
     const pitch = pitches[row]
 
-    emit("add-note", pitch, col)
+    emit("add-note", { pitch, col })
 }
 
 function onMouseClick(e: MouseEvent) {
-    addNoteUnderMouse(e)
+    if (mode.value === "insert") {
+        addNoteUnderMouse(e)
+    }
 }
 
 function onMouseMove(e: MouseEvent) {
@@ -150,6 +154,13 @@ function onMouseLeave() {
             :cols="cols"
             :row="hoverCell.row"
             :col="hoverCell.col"
+        />
+        <NoteDeletionOverlay
+            :notes="notes"
+            :pitches="pitches"
+            :rows="rows"
+            :cols="cols"
+            @remove-note="({ col, pitch }) => $emit('remove-note', { pitch, col })"
         />
     </div>
 </template>

@@ -15,20 +15,12 @@ defineEmits<{
         ref="sheet"
         :class="$style.container"
     >
-        <!-- <Bar -->
-        <!--     v-for="(barNotes, barInx) in notes" -->
-        <!--     :barNotes="barNotes" -->
-        <!--     :class="$style.bar" -->
-        <!--     :columns-num="noteColumns" -->
-        <!--     @add-note="(pitch, col) => $emit('add-note', { barInx, pitch, col })" -->
-        <!--     @remove-note="(pitch, col) => $emit('remove-note', { barInx, pitch, col })" -->
-        <!-- /> -->
-
         <Bar
             v-for="(barNotes, barInx) in notes"
             :notes="barNotes"
             :class="$style.bar"
-            @add-note="(pitch, col) => $emit('add-note', { barInx, pitch, col })"
+            @add-note="({ pitch, col }) => $emit('add-note', { barInx, pitch, col })"
+            @remove-note="({ pitch, col }) => $emit('remove-note', { barInx, pitch, col })"
         />
     </div>
 </template>

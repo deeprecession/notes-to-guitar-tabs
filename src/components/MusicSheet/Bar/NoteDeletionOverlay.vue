@@ -2,7 +2,6 @@
 import { inject, ref, type CSSProperties, type Ref } from "vue"
 import type { Pitch } from "../../../entities/Pitch"
 import type { BarNotes } from "../MusicSheetContainer.vue"
-import NoteImg from "./NoteImg.vue"
 import type { InteractionMode } from "../MusicSheetControls.vue"
 
 const props = defineProps<{ notes: BarNotes; pitches: Pitch[]; rows: number; cols: number }>()
@@ -13,14 +12,16 @@ defineEmits<{
 
 const mode = inject<Ref<InteractionMode>>("interaction-mode", ref("insert"))
 
-function notePositionStyle(pitch: Pitch, col: number): CSSProperties {
+function removeAreaStyle(pitch: Pitch, col: number): CSSProperties {
     const row = props.pitches.indexOf(pitch)
     return {
         left: `${(col / props.cols) * 100}%`,
         top: `${(row / props.rows) * 100}%`,
         width: `${100 / props.cols}%`,
         height: `${100 / props.rows}%`,
-        opacity: mode.value === "remove" ? "50%" : "100%",
+        cursor: mode.value === "remove" ? "pointer" : "unset",
+        pointerEvents: mode.value === "remove" ? "auto" : "none",
+        zIndex: mode.value === "remove" ? 10 : 0,
     } satisfies CSSProperties
 }
 </script>
@@ -29,12 +30,12 @@ function notePositionStyle(pitch: Pitch, col: number): CSSProperties {
     <div :class="$style.container">
         <template v-for="(barNotes, pitch) in notes">
             <div
-                v-for="(noteFraction, col) in barNotes"
-                :style="notePositionStyle(pitch, col)"
-                :class="$style['note']"
-            >
-                <NoteImg :note-fraction="noteFraction" />
-            </div>
+                v-for="(_, col) in barNotes"
+                v-show="mode === 'remove'"
+                :style="removeAreaStyle(pitch, col)"
+                :class="$style['remove-area']"
+                @mouseup="$emit('remove-note', { col, pitch })"
+            ></div>
         </template>
     </div>
 </template>
@@ -48,8 +49,9 @@ function notePositionStyle(pitch: Pitch, col: number): CSSProperties {
     height: 100%;
 }
 
-.note {
+.remove-area {
     position: absolute;
-    pointer-events: none;
+    background-color: red;
+    opacity: 90%;
 }
 </style>
