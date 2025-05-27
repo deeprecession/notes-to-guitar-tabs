@@ -13,9 +13,9 @@ describe("get all ways to play chord with previous tab position", () => {
         const tabs = getAllWaysToPlayChordSequence(fretboard, chord)
 
         const expected: Tab[] = [
-            [null, null, null, 11, null, null],
-            [null, null, null, null, 7, null],
-            [null, null, null, null, null, 2],
+            [null, null, 11, null, null, null],
+            [null, 7, null, null, null, null],
+            [2, null, null, null, null, null],
         ]
 
         expect(tabs[1]).to.deep.equal(expected)
@@ -28,9 +28,9 @@ describe("get all ways to play chord with previous tab position", () => {
         const tabs = getAllWaysToPlayChordSequence(fretboard, chord)
 
         const expected: Tab[] = [
-            [null, null, null, null, null, 2],
-            [null, null, null, null, 7, null],
-            [null, null, null, 11, null, null],
+            [2, null, null, null, null, null],
+            [null, 7, null, null, null, null],
+            [null, null, 11, null, null, null],
         ]
 
         expect(tabs[1]).to.deep.equal(expected)
@@ -43,9 +43,9 @@ describe("get all ways to play chord with previous tab position", () => {
         const tabs = getAllWaysToPlayChordSequence(fretboard, chord)
 
         const expected: Tab[] = [
-            [null, null, null, null, 7, null],
-            [null, null, null, 11, null, null],
-            [null, null, null, null, null, 2],
+            [null, 7, null, null, null, null],
+            [null, null, 11, null, null, null],
+            [2, null, null, null, null, null],
         ]
 
         expect(tabs[1]).to.deep.equal(expected)
@@ -58,9 +58,9 @@ describe("get all ways to play chord with previous tab position", () => {
         const tabs = getAllWaysToPlayChordSequence(fretboard, chord)
 
         const expected: Tab[] = [
-            [null, null, null, null, 7, null],
-            [null, null, null, null, null, 2],
-            [null, null, null, 11, null, null],
+            [null, 7, null, null, null, null],
+            [2, null, null, null, null, null],
+            [null, null, 11, null, null, null],
         ]
 
         expect(tabs[1]).to.deep.equal(expected)
@@ -73,9 +73,9 @@ describe("get all ways to play chord with previous tab position", () => {
         const tabs = getAllWaysToPlayChordSequence(fretboard, chord)
 
         const expected: Tab[] = [
-            [null, null, null, 11, null, null],
-            [null, null, null, null, 7, null],
-            [null, null, null, null, null, 2],
+            [null, null, 11, null, null, null],
+            [null, 7, null, null, null, null],
+            [2, null, null, null, null, null],
         ]
 
         expect(tabs[3]).to.deep.equal(expected)
@@ -88,9 +88,9 @@ describe("get all ways to play chord with previous tab position", () => {
         const tabs = getAllWaysToPlayChordSequence(fretboard, chord)
 
         const expected: Tab[] = [
-            [null, null, null, null, null, 0],
-            [null, null, null, 9, null, null],
-            [null, null, null, null, 5, null],
+            [0, null, null, null, null, null],
+            [null, null, 9, null, null, null],
+            [null, 5, null, null, null, null],
         ]
 
         expect(tabs[1]).to.deep.equal(expected)
@@ -114,7 +114,7 @@ describe("find all tabs for chord", () => {
 
         const tabs = findAllTabsForChord(fretboard, chord)
 
-        const expected: Tab[] = [[0, null, null, null, null, null]]
+        const expected: Tab[] = [[null, null, null, null, null, 0]]
         expect(tabs).to.have.deep.members(expected)
     })
 
@@ -124,7 +124,7 @@ describe("find all tabs for chord", () => {
 
         const tabs = findAllTabsForChord(fretboard, chord)
 
-        const expected: Tab[] = [[null, null, null, null, null, 12]]
+        const expected: Tab[] = [[12, null, null, null, null, null]]
         expect(tabs).to.have.deep.members(expected)
     })
 
@@ -135,9 +135,9 @@ describe("find all tabs for chord", () => {
         const tabs = findAllTabsForChord(fretboard, chord)
 
         const expected: Tab[] = [
-            [null, null, null, null, null, 2],
-            [null, null, null, null, 7, null],
-            [null, null, null, 11, null, null],
+            [2, null, null, null, null, null],
+            [null, 7, null, null, null, null],
+            [null, null, 11, null, null, null],
         ]
         expect(tabs).to.have.deep.members(expected)
     })
@@ -149,9 +149,9 @@ describe("find all tabs for chord", () => {
         const tabs = findAllTabsForChord(fretboard, chord)
 
         const expected: Tab[] = [
-            [0, null, null, null, null, 12],
-            [null, null, null, null, null, 12],
-            [0, null, null, null, null, null],
+            [12, null, null, null, null, 0],
+            [12, null, null, null, null, null],
+            [null, null, null, null, null, 0],
         ]
         expect(tabs).to.have.deep.members(expected)
     })
@@ -163,13 +163,13 @@ describe("find all tabs for chord", () => {
         const tabs = findAllTabsForChord(fretboard, chord)
 
         const expected: Tab[] = [
-            [0, null, null, null, null, null],
-            [0, null, null, 11, null, null],
-            [0, null, null, null, 7, null],
-            [0, null, null, null, null, 2],
-            [null, null, null, 11, null, null],
-            [null, null, null, null, 7, null],
-            [null, null, null, null, null, 2],
+            [null, null, null, null, null, 0],
+            [null, null, 11, null, null, 0],
+            [null, 7, null, null, null, 0],
+            [2, null, null, null, null, 0],
+            [null, null, 11, null, null, null],
+            [null, 7, null, null, null, null],
+            [2, null, null, null, null, null],
         ]
         expect(tabs).to.have.deep.members(expected)
     })
@@ -181,8 +181,8 @@ describe("find all tabs for chord", () => {
         const tabs = findAllTabsForChord(fretboard, chord)
 
         const expected: Tab[] = [
-            [null, null, null, null, null, 10],
-            [null, null, null, null, null, 12],
+            [10, null, null, null, null, null],
+            [12, null, null, null, null, null],
         ]
         expect(tabs).to.have.deep.members(expected)
     })
@@ -194,8 +194,8 @@ describe("find all tabs for chord", () => {
         const tabs = findAllTabsForChord(fretboard, chord)
 
         const expected: Tab[] = [
-            [null, null, null, null, null, 10],
-            [null, null, null, null, null, 12],
+            [10, null, null, null, null, null],
+            [12, null, null, null, null, null],
         ]
         expect(tabs).to.have.deep.members(expected)
     })
@@ -206,7 +206,7 @@ describe("find all tabs for chord", () => {
 
         const tabs = findAllTabsForChord(fretboard, chord)
 
-        const expected: Tab = [null, 0, 2, 2, 1, 0]
+        const expected: Tab = [0, 1, 2, 2, 0, null]
 
         expect(tabs).to.include.deep.includes(expected)
     })
@@ -217,7 +217,7 @@ describe("find all tabs for chord", () => {
 
         const tabs = findAllTabsForChord(fretboard, chord)
 
-        const expected: Tab = [3, 5, 5, 3, 3, 3]
+        const expected: Tab = [3, 3, 3, 5, 5, 3]
 
         expect(tabs).to.include.deep.includes(expected)
     })

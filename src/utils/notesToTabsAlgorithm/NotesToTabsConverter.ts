@@ -104,5 +104,5 @@ export function findAllTabsForChord(fretboard: Fretboard, chord: Chord): Tab[] {
         return solutions
     }
 
-    return helper(fretboard, chord).reverse()
+    return helper(fretboard, chord)
 }
