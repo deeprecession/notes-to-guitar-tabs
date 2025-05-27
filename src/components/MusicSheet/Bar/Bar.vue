@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, inject, ref, type Ref } from "vue"
+import { computed, inject, ref, type CSSProperties, type Ref } from "vue"
 import { getCellAtPoint } from "./gridGeometry"
 import { type BarNotes } from "../MusicSheetContainer.vue"
 import type { Pitch } from "../../../entities/Pitch"
@@ -114,12 +114,19 @@ function updateHoverCell(x: number, y: number) {
 function onMouseLeave() {
     isMouseOut.value = true
 }
+
+function containerStyle(): CSSProperties {
+    return {
+        cursor: mode.value === "insert" ? "pointer" : "unset",
+    }
+}
 </script>
 
 <template>
     <div
         ref="gridContainer"
         :class="$style.container"
+        :style="containerStyle()"
         @click="onMouseClick"
         @mousemove="onMouseMove"
         @mouseleave="onMouseLeave"
