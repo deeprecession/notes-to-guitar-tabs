@@ -41,8 +41,8 @@ defineProps<{
 
 .highlighted-cell {
     position: absolute;
-    background-color: mediumseagreen;
-    opacity: 25%;
+    background-color: #bbd8a3;
+    opacity: 70%;
     width: 100%;
     height: 100%;
 }

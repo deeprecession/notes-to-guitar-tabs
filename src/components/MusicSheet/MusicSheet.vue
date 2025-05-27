@@ -13,7 +13,7 @@ defineEmits<{
 <template>
     <div
         ref="sheet"
-        :class="$style.container"
+        :class="[$style.container, $style.paperSheet]"
     >
         <Bar
             v-for="(barNotes, barInx) in notes"
@@ -34,7 +34,19 @@ defineEmits<{
 
     justify-content: stretch;
 
+    padding: 1rem;
+
     row-gap: 2rem;
+}
+
+.paperSheet {
+    background: #f0f1c5;
+    padding: 2rem;
+    box-shadow:
+        0 1px 1px rgba(0, 0, 0, 0.15),
+        0 2px 2px rgba(0, 0, 0, 0.15),
+        0 4px 4px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e8e0d0;
 }
 
 .add-bar-btn {

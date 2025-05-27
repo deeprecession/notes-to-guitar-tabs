@@ -3,7 +3,7 @@ import { ref } from "vue"
 import MusicSheetContainer, {
     type MusicSheetNotes,
 } from "./components/MusicSheet/MusicSheetContainer.vue"
-import TabComponent from "./components/TabComponent/TabComponent.vue"
+import Tab from "./components/Tab/Tab.vue"
 import { getAllWaysToPlayChordSequence } from "./utils/notesToTabsAlgorithm/NotesToTabsConverter"
 import type { FinedTab } from "./utils/notesToTabsAlgorithm/TabMetrics"
 import { useNotesStorage } from "./composables/notesStorage"
@@ -45,18 +45,26 @@ function convertToTabs() {
 </script>
 
 <template>
-    <h1>Music sheet</h1>
-    <MusicSheetContainer
-        :note-cols="BAR_COLS"
-        :model-value="notes"
-    />
+    <div :class="$style.layout">
+        <h1>Music sheet</h1>
+        <MusicSheetContainer
+            :note-cols="BAR_COLS"
+            :model-value="notes"
+        />
 
-    <h1>Tabs</h1>
-    <button @click="convertToTabs">convert to tabs</button>
-    <TabComponent
-        :tabs="tabs"
-        :guitar-tuning="standardTuning"
-    />
+        <h1>Tabs</h1>
+        <button @click="convertToTabs">convert to tabs</button>
+        <Tab
+            :tabs="tabs"
+            :guitar-tuning="standardTuning"
+        />
+    </div>
 </template>
 
-<style lang="css" scoped></style>
+<style lang="css" scoped module>
+.layout {
+    min-height: 100vh;
+    background-color: #bf9264;
+    padding: 1rem;
+}
+</style>

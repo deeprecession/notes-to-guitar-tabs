@@ -57,8 +57,6 @@ watch(
     row-gap: 10rem;
 
     padding: 1rem;
-
-    background-color: #e5decf;
 }
 
 .col {
