@@ -75,6 +75,7 @@ provide<Ref<InteractionMode>>("interaction-mode", interactionMode)
         <MusicSheetControls
             v-model:interaction-mode="interactionMode"
             v-model:note-fraction="selectedFractionKey"
+            :class="$style.controls"
             @update:interaction-mode="(mode) => (interactionMode = mode)"
             @update:note-fraction="(fraction) => (selectedFractionKey = fraction)"
             @add-tab="notes.push({})"
@@ -95,5 +96,12 @@ provide<Ref<InteractionMode>>("interaction-mode", interactionMode)
     flex-flow: column nowrap;
     gap: 2rem;
     align-items: center;
+}
+
+.controls {
+    width: 100%;
+    top: 0;
+    position: sticky;
+    z-index: 10;
 }
 </style>

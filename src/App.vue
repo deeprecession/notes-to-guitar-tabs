@@ -22,4 +22,11 @@ const BAR_COLS = 16
     background-color: #bf9264;
     padding: 1rem;
 }
+
+@media only screen and (max-width: 800px) {
+    .layout {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+}
 </style>

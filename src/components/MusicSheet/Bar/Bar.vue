@@ -57,12 +57,12 @@ const rows = pitches.length
 const rowsAboveStaff = 6
 const rowHeight = computed(() => containerHeight.value / rows)
 
-function addNoteUnderMouse(e: MouseEvent) {
+function addNoteUnderCoord(clientX: number, clientY: number) {
     if (!gridContainer.value) return
 
     const bounds = gridContainer.value.getBoundingClientRect()
-    const x = e.clientX - bounds.left
-    const y = e.clientY - bounds.top
+    const x = clientX - bounds.left
+    const y = clientY - bounds.top
 
     const { col, row } = getCellAtPoint(
         { cols, rows, width: containerWidth.value, height: containerHeight.value },
@@ -76,8 +76,29 @@ function addNoteUnderMouse(e: MouseEvent) {
 
 function onMouseClick(e: MouseEvent) {
     if (mode.value === "insert") {
-        addNoteUnderMouse(e)
+        addNoteUnderCoord(e.clientX, e.clientY)
     }
+
+    isSelectorHelperHidden.value = true
+}
+
+function onTouchCancel(e: TouchEvent) {
+    if (mode.value === "insert") {
+        addNoteUnderCoord(e.changedTouches[0].clientX, e.changedTouches[0].clientY)
+    }
+
+    isSelectorHelperHidden.value = true
+}
+
+function onTouchMove(e: TouchEvent) {
+    const touch = e.touches[0]
+    if (!gridContainer.value) return
+
+    const bounds = gridContainer.value.getBoundingClientRect()
+    const x = touch.clientX - bounds.left
+    const y = touch.clientY - bounds.top
+
+    updateHoverCell(x, y)
 }
 
 function onMouseMove(e: MouseEvent) {
@@ -91,7 +112,7 @@ function onMouseMove(e: MouseEvent) {
 }
 
 const hoverCell = ref({ x: 0, y: 0, width: 0, height: 0, col: 0, row: 0 })
-const isMouseOut = ref(true)
+const isSelectorHelperHidden = ref(true)
 
 function updateHoverCell(x: number, y: number) {
     const cell = {
@@ -108,11 +129,11 @@ function updateHoverCell(x: number, y: number) {
     }
     hoverCell.value = cell
 
-    isMouseOut.value = false
+    isSelectorHelperHidden.value = false
 }
 
 function onMouseLeave() {
-    isMouseOut.value = true
+    isSelectorHelperHidden.value = true
 }
 
 function containerStyle(): CSSProperties {
@@ -130,13 +151,16 @@ function containerStyle(): CSSProperties {
         @click="onMouseClick"
         @mousemove="onMouseMove"
         @mouseleave="onMouseLeave"
+        @touchmove="onTouchMove"
+        @touchend="onTouchCancel"
+        @touchcancel="onTouchCancel"
     >
         <BarLines
             :row-height="rowHeight"
             :rows-above-staff="rowsAboveStaff"
         />
         <HighlightOverlay
-            v-show="!isMouseOut && mode === 'insert'"
+            v-show="!isSelectorHelperHidden && mode === 'insert'"
             :area="hoverCell"
         />
         <Notes
@@ -153,10 +177,10 @@ function containerStyle(): CSSProperties {
             :row-height="rowHeight"
             :rows-above-staff="rowsAboveStaff"
             :hoveredCell="hoverCell"
-            :is-hovered-cell-shown="!isMouseOut && mode === 'insert'"
+            :is-hovered-cell-shown="!isSelectorHelperHidden && mode === 'insert'"
         />
         <GhostNote
-            v-show="!isMouseOut && mode === 'insert'"
+            v-show="!isSelectorHelperHidden && mode === 'insert'"
             :rows="rows"
             :cols="cols"
             :row="hoverCell.row"
@@ -180,5 +204,8 @@ function containerStyle(): CSSProperties {
     position: relative;
     border-left: 1px solid black;
     border-right: 1px solid black;
+
+    user-select: none;
+    touch-action: none;
 }
 </style>

@@ -71,8 +71,6 @@ function convertToTabs(notes: BarNotes): FinedTab[][] {
 
     justify-content: stretch;
 
-    padding: 1rem;
-
     row-gap: 2rem;
 }
 
@@ -84,6 +82,13 @@ function convertToTabs(notes: BarNotes): FinedTab[][] {
         0 2px 2px rgba(0, 0, 0, 0.15),
         0 4px 4px rgba(0, 0, 0, 0.1);
     border: 1px solid #e8e0d0;
+}
+
+@media only screen and (max-width: 800px) {
+    .paperSheet {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
 }
 
 .add-bar-btn {
@@ -106,15 +111,8 @@ function convertToTabs(notes: BarNotes): FinedTab[][] {
     flex: 1;
 
     gap: 2rem;
-}
 
-.bar {
-    min-width: 320px;
-    min-height: 220px;
-}
-
-.tab {
-    min-width: 320px;
-    min-height: 220px;
+    min-width: 240px;
+    min-height: 440px;
 }
 </style>

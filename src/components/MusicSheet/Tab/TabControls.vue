@@ -27,7 +27,7 @@ watch(
                 :class="$style.btn"
                 @click="curTabInx[tabInx]--"
             >
-                ⬆️
+                ↑
             </button>
         </div>
 
@@ -40,7 +40,7 @@ watch(
                 :class="$style.btn"
                 @click="curTabInx[tabInx]++"
             >
-                ⬇️
+                ↓
             </button>
         </div>
     </div>
@@ -63,5 +63,6 @@ watch(
 
 .btn {
     padding: 0;
+    width: 100%;
 }
 </style>

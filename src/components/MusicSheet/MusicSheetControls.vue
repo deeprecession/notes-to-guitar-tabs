@@ -1,11 +1,5 @@
 <script setup lang="ts">
-import {
-    ToolbarButton,
-    ToolbarRoot,
-    ToolbarSeparator,
-    ToolbarToggleGroup,
-    ToolbarToggleItem,
-} from "radix-vue"
+import { ToolbarButton, ToolbarRoot, ToolbarToggleGroup, ToolbarToggleItem } from "radix-vue"
 import { defaultNoteFractionKey, noteFractionsMap, type NoteFractionKey } from "./noteFractions"
 
 const noteFractionModel = defineModel<NoteFractionKey>("noteFraction", {
@@ -26,6 +20,27 @@ defineEmits<{
 
 <template>
     <ToolbarRoot :class="$style.ToolbarRoot">
+        <ToolbarButton
+            :class="$style.AddTabButton"
+            @click="$emit('addTab')"
+            >Add Tab</ToolbarButton
+        >
+
+        <ToolbarButton
+            v-if="interactionMode === 'insert'"
+            :class="$style.AddTabButton"
+            @click="$emit('update:interactionMode', 'remove')"
+        >
+            Remove mode
+        </ToolbarButton>
+        <ToolbarButton
+            v-if="interactionMode === 'remove'"
+            :class="$style.ResetSheetButton"
+            @click="$emit('update:interactionMode', 'insert')"
+        >
+            Insert mode
+        </ToolbarButton>
+
         <ToolbarToggleGroup
             :class="$style.ToolbarToggleGroup"
             :model-value="noteFractionModel"
@@ -37,41 +52,18 @@ defineEmits<{
                 :value="key"
                 :class="$style.ToolbarToggleItem"
             >
-                {{ fraction.name }}
+                <img
+                    :src="fraction.iconPath"
+                    :alt="fraction.name"
+                    :class="$style.noteImage"
+                />
             </ToolbarToggleItem>
         </ToolbarToggleGroup>
-
-        <ToolbarSeparator :class="$style.ToolbarSeparator" />
-
-        <ToolbarButton
-            :class="$style.AddTabButton"
-            @click="$emit('addTab')"
-            >Add Tab</ToolbarButton
-        >
-
-        <ToolbarSeparator :class="$style.ToolbarSeparator" />
 
         <ToolbarButton
             :class="$style.ResetSheetButton"
             @click="$emit('resetSheet')"
-            >Reset Sheet</ToolbarButton
-        >
-
-        <ToolbarSeparator :class="$style.ToolbarSeparator" />
-
-        <ToolbarButton
-            v-if="interactionMode === 'insert'"
-            :class="$style.AddTabButton"
-            @click="$emit('update:interactionMode', 'remove')"
-        >
-            Switch to Remove mode
-        </ToolbarButton>
-        <ToolbarButton
-            v-if="interactionMode === 'remove'"
-            :class="$style.ResetSheetButton"
-            @click="$emit('update:interactionMode', 'insert')"
-        >
-            Switch to Insert mode
+            >Reset Sheet
         </ToolbarButton>
     </ToolbarRoot>
 </template>
@@ -84,9 +76,14 @@ button {
 
 .ToolbarRoot {
     display: flex;
+    flex-flow: row wrap;
+
+    justify-content: center;
+    align-items: center;
+
+    gap: 10px;
+
     padding: 10px;
-    width: fit-content;
-    min-width: max-content;
     border-radius: 6px;
     background-color: white;
     box-shadow: 0 2px 10px var(--black-a7);
@@ -138,12 +135,6 @@ button {
     margin: 0 10px;
 }
 
-@media (min-width: 520px) {
-    .ToolbarLink {
-        display: inline-flex;
-    }
-}
-
 .AddTabButton {
     padding-left: 10px;
     padding-right: 10px;
@@ -166,5 +157,15 @@ button {
 .ResetSheetButton:hover {
     background-color: var(--red-10);
     color: white;
+}
+
+.noteImage {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+    object-position: center;
 }
 </style>

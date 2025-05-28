@@ -42,5 +42,8 @@ function getSolutionInxForCol(tabSolutions: FinedTab[], col: number) {
 .container {
     width: 100%;
     height: 100%;
+
+    touch-action: manipulation;
+    user-select: none;
 }
 </style>
