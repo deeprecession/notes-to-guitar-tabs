@@ -1,4 +1,7 @@
 # notes-to-guitar-tabs
+
+![image](docs/notes-to-guitar-tab-demo.gif)
+
 I've always found it difficult to translate sheet music to guitar tabs, so I created this web app to do it automatically. It generates all possible ways to play the provided notes, helping me find the most convenient fingerings without spending hours working through the translation manually
 
 [try it out](https://notes-to-guitar-tabs.vercel.app/)
@@ -9,6 +12,12 @@ I've always found it difficult to translate sheet music to guitar tabs, so I cre
 3. Select a tabular that you find more convinient
 4. Save or Export
 
-## Sceenshot
+## Features
+1. The app finds all possible solutions of how to play each chord and sorts them by ease of playing
 
-![image](https://github.com/user-attachments/assets/14b9524b-8096-4e2b-9745-31039ed5b769)
+## Future features
+1. Export to pdf
+2. Storage of pieces
+3. Key selection
+4. Guitar tuning change
+
